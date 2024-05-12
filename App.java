@@ -2,6 +2,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -37,6 +38,7 @@ public class App extends Application {
     private MorphingFormesSimples moteurMorphing;
     private List<Forme> formes;
     private int etapeCourante;
+    private Point pointEnCoursDeDeplacement;
 
     @Override
     public void start(Stage primaryStage) {
@@ -66,25 +68,53 @@ public class App extends Application {
             double y = event.getY();
 
             //crée un nouveau point avec les coordonnées du clic
-            Point point = new Point(x, y);
+            Point pointDébut = new Point(x, y);
+            Point pointFin = new Point(x, y);
 
             char label = alphabet.charAt(alphabetIndex[0]);
             alphabetIndex[0]++; 
 
             //ajoute le point à la liste des points de contrôle de la forme de début 
-            pointsControleDebut.put(label,point);
+            pointsControleDebut.put(label,pointDébut);
             //ajoute le point à la liste des points de contrôle de la forme de fin 
-            pointsControleFin.put(label,point);
+            pointsControleFin.put(label,pointFin);
 
-            //redessiner la forme de gauche avec les nouveaux points de contrôle
-            dessiner();
-
-            //à faire : stocker les coordonnées des points de contrôle pour utilisation dans le morphing
+            //redessine la forme de gauche avec les nouveaux points de contrôle
+            dessiner(); 
         });
 
 
         canvasDroite = new Canvas(LARGEUR_CANVAS, HAUTEUR_CANVAS);
         gcDroite = canvasDroite.getGraphicsContext2D();
+
+        canvasDroite.setOnMousePressed(event -> {
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+        
+            //vérifie si la souris est sur un point de contrôle existant de la forme de fin
+            for (Map.Entry<Character, Point> entry : pointsControleFin.entrySet()) {
+                Point point = entry.getValue();
+                if (isMouseOnPoint(mouseX, mouseY, point)) {
+                    pointEnCoursDeDeplacement = point;
+                    break;
+                }
+            }
+        });
+        
+        canvasDroite.setOnMouseDragged(event -> {
+            if (pointEnCoursDeDeplacement != null) {
+                double mouseX = event.getX();
+                double mouseY = event.getY();
+                pointEnCoursDeDeplacement.setX(mouseX);
+                pointEnCoursDeDeplacement.setY(mouseY);
+                dessiner();
+            }
+        });
+        
+        canvasDroite.setOnMouseReleased(event -> {
+            pointEnCoursDeDeplacement = null;
+        });
+        
 
         canvasResultat = new Canvas(LARGEUR_CANVAS * 2, HAUTEUR_CANVAS);
         gcResultat = canvasResultat.getGraphicsContext2D();
@@ -108,11 +138,22 @@ public class App extends Application {
             dessiner();
         });
 
-        HBox choixFormesHBox = new HBox(10);
-        choixFormesHBox.getChildren().addAll(choixFormeDebutComboBox, choixFormeFinComboBox);
+        Button boutonReset = new Button("Réinitialiser");
+        boutonReset.setOnAction(event -> {
+            //efface les points de contrôle de début et de fin
+            pointsControleDebut.clear();
+            pointsControleFin.clear();
 
+            //dessine à nouveau les formes pour effacer les points de contrôle du canvas
+            dessiner();
+        });
+
+        HBox choixFormesHBox = new HBox(10);
+        choixFormesHBox.getChildren().addAll(choixFormeDebutComboBox, choixFormeFinComboBox, boutonReset);
+        choixFormesHBox.setAlignment(Pos.CENTER);
         HBox canvasHBox = new HBox(10);
         canvasHBox.getChildren().addAll(canvasGauche, canvasDroite);
+        canvasHBox.setAlignment(Pos.CENTER);
 
         //champ nb d'étapes
         TextField champEtapes = new TextField("10");
@@ -126,6 +167,7 @@ public class App extends Application {
 
         HBox optionsHBox = new HBox(10);
         optionsHBox.getChildren().addAll(etapesLabel, champEtapes, delaiLabel, champDelai);
+        optionsHBox.setAlignment(Pos.CENTER);
 
         //bouton pour lancer le morphing 
         Button boutonMorphing = new Button("Morphing");
@@ -133,8 +175,8 @@ public class App extends Application {
             int nbEtapes = Integer.parseInt(champEtapes.getText());  //recup le nombre d'étapes
             int delai = Integer.parseInt(champDelai.getText());  //recup le délai
 
-            //génére formes intermédiaires avec le nouveau nombre d'étapes
-            moteurMorphing = new MorphingFormesSimples(formeDebut, formeFin, nbEtapes);
+            //génère formes intermédiaires avec le nouveau nombre d'étapes
+            moteurMorphing = new MorphingFormesSimples(formeDebut, formeFin, pointsControleDebut, pointsControleFin, nbEtapes);
             formes = moteurMorphing.genererFormesIntermediaires();
 
             demarrerMorphing(gcResultat, canvasResultat, delai); 
@@ -142,6 +184,7 @@ public class App extends Application {
 
         VBox optionsVBox = new VBox(10);
         optionsVBox.getChildren().addAll(optionsHBox, boutonMorphing);
+        optionsVBox.setAlignment(Pos.CENTER);
 
         VBox rootVBox = new VBox(10);
         rootVBox.getChildren().addAll(choixFormesHBox, canvasHBox, optionsVBox, canvasResultat);
@@ -254,6 +297,12 @@ public class App extends Application {
             Point p2 = points[(i + 1) % points.length];
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
+    }
+
+    //vérifie si la souris est sur un point de contrôle existant
+    private boolean isMouseOnPoint(double mouseX, double mouseY, Point point) {
+        double distance = Math.sqrt(Math.pow(mouseX - point.getX(), 2) + Math.pow(mouseY - point.getY(), 2));
+        return distance <= 5; //rayon de détection du point de contrôle
     }
 
     public static void main(String[] args) {
