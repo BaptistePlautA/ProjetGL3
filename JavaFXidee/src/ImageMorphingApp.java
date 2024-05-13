@@ -33,6 +33,11 @@ import java.util.Map;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+import java.io.IOException;
+import javafx.scene.image.WritableImage;
+import javafx.embed.swing.SwingFXUtils;
+
 public class ImageMorphingApp extends Application {
 
     private Scene sceneArrondie;
@@ -540,13 +545,25 @@ public class ImageMorphingApp extends Application {
 
     ////Méthode Scène 1
     private void demarrerMorphing(GraphicsContext gc, Canvas canvas, int delai) {
+        File dossier = new File("./FormesSimples");
         etapeCourante = 0;
+        // Vérifier si le dossier existe
+        if (dossier.exists() && dossier.isDirectory()) {
+            //suppression et création du dossier
+            System.out.println("Le dossier existe.");
+            supprimerDossier(dossier);
+            dossier.mkdirs();
+        } else {
+            System.out.println("Le dossier n'existe pas.");
+            //création du dossier
+            dossier.mkdirs();
+        }
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(delai), e -> {
             etapeCourante++;
             if (etapeCourante >= formes.size()) {
                 etapeCourante = 0; 
             }
-            dessinerForme(gc, formes.get(etapeCourante));
+            dessinerForme(gc, formes.get(etapeCourante),canvas);
         }));
         timeline.setCycleCount(formes.size() - 1);  //animation sur nbEtapes - 1 pour s'arrêter à la dernière
         timeline.play();
@@ -554,7 +571,7 @@ public class ImageMorphingApp extends Application {
 
     ////Méthode Scène 1
     //dessine formes intermédiaires
-    private void dessinerForme(GraphicsContext gc, Forme forme) {
+    private void dessinerForme(GraphicsContext gc, Forme forme, Canvas canvas) {
         gc.clearRect(0, 0, LARGEUR_CANVAS, HAUTEUR_CANVAS);  //effacer le canevas
         gc.setStroke(Color.BLACK);
         Point[] points = forme.getPoints();
@@ -563,12 +580,45 @@ public class ImageMorphingApp extends Application {
             Point p2 = points[(i + 1) % points.length];
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
+        //capture d'écran du canvas
+        WritableImage snapshot = canvas.snapshot(null, new WritableImage(LARGEUR_CANVAS, HAUTEUR_CANVAS));
+        
+        //attribution d'un nom unique pour chaque image générée
+        String cheminFichier = "./FormesSimples/image_"+System.currentTimeMillis()+".png";
+
+        //enregistrement de l'image
+        File fichierImage = new File(cheminFichier);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", fichierImage);
+            System.out.println("Image enregistrée avec succès.");
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
+        }
+        
     }
 
     //vérifie si la souris est sur un point de contrôle existant
     private boolean isMouseOnPoint(double mouseX, double mouseY, Point point) {
         double distance = Math.sqrt(Math.pow(mouseX - point.getX(), 2) + Math.pow(mouseY - point.getY(), 2));
         return distance <= 5; //rayon de détection du point de contrôle
+    }
+    
+    //permet de supprimer un dossier
+    public static boolean supprimerDossier(File dossier) {
+        if (dossier.isDirectory()) {
+            // Récupérer la liste des fichiers et sous-dossiers du dossier
+            File[] fichiers = dossier.listFiles();
+            if (fichiers != null) {
+                for (File fichier : fichiers) {
+                    // Récursivement supprimer chaque fichier ou sous-dossier
+                    if (!supprimerDossier(fichier)) {
+                        return false; // Arrêter si la suppression échoue pour l'un des fichiers
+                    }
+                }
+            }
+        }
+        // Supprimer le dossier lui-même après avoir supprimé son contenu
+        return dossier.delete();
     }
     
 
