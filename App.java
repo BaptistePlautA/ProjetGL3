@@ -313,12 +313,22 @@ public class App extends Application {
     private void dessinerForme(GraphicsContext gc, Forme forme, Canvas canvas) {
         gc.clearRect(0, 0, LARGEUR_CANVAS, HAUTEUR_CANVAS);  //effacer le canevas
         gc.setStroke(Color.BLACK);
+        gc.setFill(Color.GREEN);
+
         Point[] points = forme.getPoints();
+        double[] xCoords = new double[points.length];
+        double[] yCoords = new double[points.length];
+
         for (int i = 0; i < points.length; i++) {
-            Point p1 = points[i];
-            Point p2 = points[(i + 1) % points.length];
-            gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        }      
+            Point p = points[i];
+            xCoords[i] = p.getX();
+            yCoords[i] = p.getY();
+        }
+
+        //dessine le contour de la forme
+        gc.strokePolygon(xCoords, yCoords, points.length);
+        //remplit la forme avec la couleur voulue
+        gc.fillPolygon(xCoords, yCoords, points.length);    
 
         //capture d'écran du canvas
         WritableImage snapshot = canvas.snapshot(null, new WritableImage(LARGEUR_CANVAS, HAUTEUR_CANVAS));
