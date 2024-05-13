@@ -1,6 +1,7 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +21,21 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.awt.color.*;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.scene.image.Image;
+
+
 
 public class App extends Application {
 
@@ -275,20 +291,34 @@ public class App extends Application {
     }
 
     private void demarrerMorphing(GraphicsContext gc, Canvas canvas, int delai) {
+
+        File dossier = new File("./FormesSimples");
         etapeCourante = 0;
+        
+        // Vérifier si le dossier existe
+        if (dossier.exists() && dossier.isDirectory()) {
+            //suppression et création du dossier
+            System.out.println("Le dossier existe.");
+            supprimerDossier(dossier);
+            dossier.mkdirs();
+        } else {
+            System.out.println("Le dossier n'existe pas.");
+            //création du dossier
+            dossier.mkdirs();
+        }
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(delai), e -> {
             etapeCourante++;
             if (etapeCourante >= formes.size()) {
                 etapeCourante = 0; 
             }
-            dessinerForme(gc, formes.get(etapeCourante));
+            dessinerForme(gc, formes.get(etapeCourante), canvas);
         }));
         timeline.setCycleCount(formes.size() - 1);  //animation sur nbEtapes - 1 pour s'arrêter à la dernière
         timeline.play();
     }
 
     //dessine formes intermédiaires
-    private void dessinerForme(GraphicsContext gc, Forme forme) {
+    private void dessinerForme(GraphicsContext gc, Forme forme, Canvas canvas) {
         gc.clearRect(0, 0, LARGEUR_CANVAS, HAUTEUR_CANVAS);  //effacer le canevas
         gc.setStroke(Color.BLACK);
         Point[] points = forme.getPoints();
@@ -296,6 +326,21 @@ public class App extends Application {
             Point p1 = points[i];
             Point p2 = points[(i + 1) % points.length];
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+        }      
+
+        //capture d'écran du canvas
+        WritableImage snapshot = canvas.snapshot(null, new WritableImage(LARGEUR_CANVAS, HAUTEUR_CANVAS));
+        
+        //attribution d'un nom unique pour chaque image générée
+        String cheminFichier = "./FormesSimples/image_"+System.currentTimeMillis()+".png";
+
+        //enregistrement de l'image
+        File fichierImage = new File(cheminFichier);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", fichierImage);
+            System.out.println("Image enregistrée avec succès.");
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
         }
     }
 
@@ -303,6 +348,24 @@ public class App extends Application {
     private boolean isMouseOnPoint(double mouseX, double mouseY, Point point) {
         double distance = Math.sqrt(Math.pow(mouseX - point.getX(), 2) + Math.pow(mouseY - point.getY(), 2));
         return distance <= 5; //rayon de détection du point de contrôle
+    }
+
+    //permet de supprimer un dossier
+    public static boolean supprimerDossier(File dossier) {
+        if (dossier.isDirectory()) {
+            // Récupérer la liste des fichiers et sous-dossiers du dossier
+            File[] fichiers = dossier.listFiles();
+            if (fichiers != null) {
+                for (File fichier : fichiers) {
+                    // Récursivement supprimer chaque fichier ou sous-dossier
+                    if (!supprimerDossier(fichier)) {
+                        return false; // Arrêter si la suppression échoue pour l'un des fichiers
+                    }
+                }
+            }
+        }
+        // Supprimer le dossier lui-même après avoir supprimé son contenu
+        return dossier.delete();
     }
 
     public static void main(String[] args) {
