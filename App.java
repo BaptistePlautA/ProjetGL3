@@ -143,7 +143,7 @@ public class App extends Application {
             //efface les points de contrôle de début et de fin
             pointsControleDebut.clear();
             pointsControleFin.clear();
-
+            alphabetIndex[0]=0;
             //dessine à nouveau les formes pour effacer les points de contrôle du canvas
             dessiner();
         });
