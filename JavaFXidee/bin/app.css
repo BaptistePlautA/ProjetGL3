@@ -41,6 +41,7 @@
     -fx-border-color: transparent;
     -fx-border-radius: 5px;
     -fx-cursor: hand;
+    -fx-max-width: 100px;
     -fx-pref-height: 30px; 
 }
 
@@ -48,6 +49,24 @@
     -fx-background-color: #252525;
 }
 
+.Mid_TextField {
+    -fx-font-family: "Roboto Condensed", sans-serif;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px; 
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: transparent;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+    -fx-max-width: 100px; 
+    -fx-pref-height: 30px; 
+}
+
+.Mid_Label {
+    -fx-font-family: "Roboto Condensed", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
 
 .Return_Button {
     -fx-font-family: "Roboto Condensed", sans-serif;
