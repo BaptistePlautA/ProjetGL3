@@ -1,3 +1,5 @@
+package utilitaires;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import utilitaires.Point;
+//import utilitaires.Point;
 
 import java.io.File;
 import java.util.function.UnaryOperator;
@@ -43,7 +45,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
 
         // Setup de l'icône de l'app
-        Image icon = new Image(getClass().getResourceAsStream("icon.png"));
+        Image icon = new Image(getClass().getResourceAsStream("../icon.png"));
         primaryStage.getIcons().add(icon);
 
         ////////////////////////////////////Scene 0 : Menu
@@ -208,7 +210,7 @@ public class App extends Application {
     
     //Méthode pour créer le bouton de retour
     private Button creerBoutonRetour(Scene scene) {
-        Image imageRetour = new Image(getClass().getResourceAsStream("return.png"));
+        Image imageRetour = new Image(getClass().getResourceAsStream("../return.png"));
         ImageView imageRetourView = new ImageView(imageRetour);
         imageRetourView.setFitWidth(15);
         imageRetourView.setFitHeight(15);

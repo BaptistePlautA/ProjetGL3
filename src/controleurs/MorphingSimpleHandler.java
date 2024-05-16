@@ -1,7 +1,6 @@
 
-package handlers;
+package controleurs;
 
-import java.util.HashMap;
 import java.util.Map;
 import utilitaires.*;
 
@@ -12,7 +11,7 @@ import javafx.scene.control.TextField;
 public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
     private TextField champEtapes;
     private TextField champDelai;
-
+    
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai) {
         this.champEtapes = champEtapes;
         this.champDelai = champDelai;
@@ -20,20 +19,11 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-    	int nbEtapes = 5;
-        //int nbEtapes = Integer.parseInt(champEtapes.getText());
-        int delai = Integer.parseInt(champDelai.getText());
-        //System.out.println("Nombre d'étapes : " + nbEtapes + ", delai (ms) : " + delai);
 
-        Point dp1 = new Point(10, 40);
-        Point fp1 = new Point(50, 20);
-        App.pointsControleDebut.put('A',dp1);
-        App.pointsControleFin.put('A',fp1);
-             
-        Point dp2 = new Point(100, 40);
-        Point fp2 = new Point(110, 50);
-        App.pointsControleDebut.put('B',dp2);
-        App.pointsControleFin.put('B',fp2);
+        int nbEtapes = Integer.parseInt(champEtapes.getText());
+        int delai = Integer.parseInt(champDelai.getText());
+        
+        System.out.println("Nombre d'etapes : " + nbEtapes + ", delai (ms) : " + delai);
         
         while(nbEtapes>=0) {
         	calculEnsemblePointSuivant(nbEtapes);
@@ -43,12 +33,13 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         
     }
     private void calculEnsemblePointSuivant(int nbEtapes) {
-    	for (Map.Entry<Character, Point> entry : App.pointsControleDebut.entrySet()) {
+    	
+    	for (Map.Entry<Character, Point> entry : PointsControleHandler.pointsControleDebut.entrySet()) {
         	Character key = entry.getKey();
             Point pointDebut = entry.getValue();
-            Point pointFin = App.pointsControleFin.get(key);
-            System.out.println("Point "+key+" debut: " + pointDebut.getX() + "," + pointDebut.getY());
+            Point pointFin = PointsControleHandler.pointsControleFin.get(key);
             
+            System.out.println(key+" : ("+pointDebut.getX()+","+pointDebut.getY()+")");
             calculPointSuivant(pointDebut, pointFin, nbEtapes);
         }
     }
@@ -73,6 +64,4 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         	pointDebut.setY(pointDebut.getY()-retraitY);
         }
     }
-    
-    //public void pointsSuivants(Map<Character, Point> pointsControleDebut) {
 }
