@@ -1,4 +1,10 @@
-package controleurs;
+
+package handlers;
+
+import java.util.HashMap;
+import java.util.Map;
+import utilitaires.*;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
@@ -10,14 +16,63 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai) {
         this.champEtapes = champEtapes;
         this.champDelai = champDelai;
-    }
+        }
 
     @Override
     public void handle(ActionEvent event) {
-        int nbEtapes = Integer.parseInt(champEtapes.getText());
+    	int nbEtapes = 5;
+        //int nbEtapes = Integer.parseInt(champEtapes.getText());
         int delai = Integer.parseInt(champDelai.getText());
-        System.out.println("Nombre d'étapes : " + nbEtapes + ", delai (ms) : " + delai);
+        //System.out.println("Nombre d'étapes : " + nbEtapes + ", delai (ms) : " + delai);
 
-        // Ajoutez ici votre méthode de morphing simple
+        Point dp1 = new Point(10, 40);
+        Point fp1 = new Point(50, 20);
+        App.pointsControleDebut.put('A',dp1);
+        App.pointsControleFin.put('A',fp1);
+             
+        Point dp2 = new Point(100, 40);
+        Point fp2 = new Point(110, 50);
+        App.pointsControleDebut.put('B',dp2);
+        App.pointsControleFin.put('B',fp2);
+        
+        while(nbEtapes>=0) {
+        	calculEnsemblePointSuivant(nbEtapes);
+        	
+        	nbEtapes-=1;
+        }
+        
     }
+    private void calculEnsemblePointSuivant(int nbEtapes) {
+    	for (Map.Entry<Character, Point> entry : App.pointsControleDebut.entrySet()) {
+        	Character key = entry.getKey();
+            Point pointDebut = entry.getValue();
+            Point pointFin = App.pointsControleFin.get(key);
+            System.out.println("Point "+key+" debut: " + pointDebut.getX() + "," + pointDebut.getY());
+            
+            calculPointSuivant(pointDebut, pointFin, nbEtapes);
+        }
+    }
+    private void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
+    	double diffX = pointFin.getX()-pointDebut.getX();
+        double diffY = pointFin.getY()-pointDebut.getY();
+        
+        if(diffX>= 0) {
+        	double ajoutX = diffX/nbEtapes;
+        	pointDebut.setX(pointDebut.getX()+ajoutX);
+        }
+        else {
+        	double retraitX = (-diffX)/nbEtapes;
+        	pointDebut.setX(pointDebut.getX()-retraitX);
+        }
+        if(diffY>= 0) {
+        	double ajoutY = diffY/nbEtapes;
+        	pointDebut.setY(pointDebut.getY()+ajoutY);
+        }
+        else {
+        	double retraitY = (-diffY)/nbEtapes;
+        	pointDebut.setY(pointDebut.getY()-retraitY);
+        }
+    }
+    
+    //public void pointsSuivants(Map<Character, Point> pointsControleDebut) {
 }

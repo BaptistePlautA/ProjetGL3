@@ -30,8 +30,8 @@ import java.util.Map;
 
 public class App extends Application {
 
-	 private Map<Character, Point> pointsControleDebut = new HashMap<>();
-	 private Map<Character, Point> pointsControleFin = new HashMap<>();
+	 public static Map<Character, Point> pointsControleDebut = new HashMap<>();
+	 public static Map<Character, Point> pointsControleFin = new HashMap<>();
 
     //private Scene sceneArrondie;
     private Scene mainMenuScene;
