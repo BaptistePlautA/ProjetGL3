@@ -9,7 +9,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
 import utilitaires.Point; 
 
 public class PointsControleHandler implements EventHandler<ActionEvent> {
@@ -21,8 +20,8 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
     private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private int[] alphabetIndex = {0};
 
-    private Map<Character, Point> pointsControleDebut = new HashMap<>();
-    private Map<Character, Point> pointsControleFin = new HashMap<>();
+    public static Map<Character, Point> pointsControleDebut = new HashMap<>();
+    public static Map<Character, Point> pointsControleFin = new HashMap<>();
 
     public PointsControleHandler (StackPane leftPane, StackPane rightPane){
         this.leftPane = leftPane; 
@@ -44,7 +43,7 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
 
         pointsControleDebut.put(label, pointDebut);
         pointsControleFin.put(label, pointFin);
-
+        
         afficher(pointDebut, pointFin, label);
     }
 
