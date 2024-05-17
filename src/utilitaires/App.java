@@ -39,7 +39,6 @@ public class App extends Application {
     private Scene mainMenuScene;
     private Scene sceneSimple;
     //private Scene sceneComplexe;
-    
 
     @Override
     public void start(Stage primaryStage) {
@@ -95,7 +94,9 @@ public class App extends Application {
         ///LEFT
         ImageView imageGauche = creerImageView();
         Button boutonIMGGauche = new Button("Choisir l'image de gauche");
-        boutonIMGGauche.setOnAction(new ChoixIMGHandler(imageGauche));
+        boutonIMGGauche.setOnAction(event -> {
+        	new ChoixIMGHandler(imageGauche);
+        });
 
         //add image view dans pane pour add pt controle 
         StackPane leftPane = new StackPane(); 
@@ -141,7 +142,7 @@ public class App extends Application {
         Label delaiLabel = new Label("Délai (ms):");
         
         Button boutonMorphing = new Button("Morphisme");
-        boutonMorphing.setOnAction(new MorphingSimpleHandler(champEtapes, champDelai));
+        boutonMorphing.setOnAction(new MorphingSimpleHandler(champEtapes, champDelai, imageGauche));
         
         VBox midBox = new VBox(10, boutonMorphing, boutonReset,champEtapes,etapesLabel,champDelai,delaiLabel);
         midBox.setAlignment(Pos.CENTER);

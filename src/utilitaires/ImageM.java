@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 public class ImageM {
 	
-	private Pixel[][] tab; 
+	public Pixel[][] tab; 
     
     public ImageM(String imagePath) {
         BufferedImage image = null;
@@ -59,7 +59,7 @@ public class ImageM {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                Pixel pixel = tab[y][x];
+                Pixel pixel = tab[x][y];
                 int rgb = (pixel.getR() << 16) | (pixel.getV() << 8) | pixel.getB();
                 image.setRGB(x, y, rgb);
             }
