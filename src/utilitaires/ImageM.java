@@ -38,6 +38,10 @@ public class ImageM {
         }
     }
 
+    public ImageM(Pixel[][] pixels) {
+        this.tab = pixels;
+    }
+
     public int getHauteur(){
         return tab.length; 
     }
@@ -46,9 +50,10 @@ public class ImageM {
         return tab[0].length; 
     }
 
-    public ImageM(Pixel[][] pixels) {
-        this.tab = pixels;
+    public Pixel[][] getTab(){
+        return tab; 
     }
+    
 
 
     public void saveImage(String outputPath) {
