@@ -12,25 +12,22 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 
-public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
-    private TextField champEtapes;
-    private TextField champDelai;
+public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
     private ImageView imageGauche;
     private String imagePath;
     
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche) {
-        this.champEtapes = champEtapes;
-        this.champDelai = champDelai;
+        super(champEtapes, champDelai); 
         this.imageGauche= imageGauche;
-        }
+    }
 
     @Override
     public void handle(ActionEvent event) {
 
-        int nbEtapes = Integer.parseInt(champEtapes.getText());
-        int delai = Integer.parseInt(champDelai.getText());
-        
-        videDossierFormeSimples();
+        int nbEtapes = Integer.parseInt(getChampEtapes().getText());
+        int delai = Integer.parseInt(getChampDelai().getText());
+
+        dossierFormeSimples();
         
         javafx.scene.image.Image image = imageGauche.getImage();
         if (image != null) {
@@ -44,7 +41,6 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
                 
         ImageM imageFondModifie = modifFondImage(new ImageM(imagePath));
         
-        
         colorPointsDeControle(imageFondModifie);
         while(nbEtapes>0) {
         	calculEnsemblePointSuivant(nbEtapes);
@@ -53,54 +49,10 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         	nbEtapes-=1;
         }
         ConvertisseurGIF convertisseur = new ConvertisseurGIF();
-        convertisseur.convertirEnGif(delai);
-        
+        convertisseur.convertirEnGif(delai);   
     }
-    private void videDossierFormeSimples() {
-    	String directoryPath = "./FormesSimples";
-        File directory = new File(directoryPath);
-        if (directory.exists() && directory.isDirectory()) {
-            File[] contents = directory.listFiles();
-            if (contents != null) {
-                for (File file : contents) {
-                    file.delete(); // Supprime le fichier ou le dossier
-                }
-            }
-        }
-    }
-    private void calculEnsemblePointSuivant(int nbEtapes) {
-    	
-    	for (Map.Entry<Character, Point> entry : PointsControleHandler.pointsControleDebut.entrySet()) {
-        	Character key = entry.getKey();
-            Point pointDebut = entry.getValue();
-            Point pointFin = PointsControleHandler.pointsControleFin.get(key);
-            
-            //System.out.println(key+" : ("+pointDebut.getX()+","+pointDebut.getY()+")");
-            calculPointSuivant(pointDebut, pointFin, nbEtapes);
-        }
-    }
-    private void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
-    	double diffX = pointFin.getX()-pointDebut.getX();
-        double diffY = pointFin.getY()-pointDebut.getY();
-        
-        if(diffX>= 0) {
-        	double ajoutX = diffX/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()+ajoutX);
-        }
-        else {
-        	double retraitX = (-diffX)/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()-retraitX);
-        }
-        if(diffY>= 0) {
-        	double ajoutY = diffY/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()+ajoutY);
-        }
-        else {
-        	double retraitY = (-diffY)/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()-retraitY);
-        }
-    }
-    private ImageM modifFondImage(ImageM imageMGauche) {
+
+    public ImageM modifFondImage(ImageM imageMGauche) {
         Pixel[][] tab = imageMGauche.getTab();
         for (int y = 0; y < imageMGauche.getLargeur(); y++) {
             for (int x = 0; x < imageMGauche.getHauteur(); x++) {
@@ -112,7 +64,8 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         }
         return imageMGauche;
     }
-    private void colorPointsDeControle(ImageM imageMGauche) {
+    
+    public void colorPointsDeControle(ImageM imageMGauche) {
         Pixel[][] tab = imageMGauche.getTab(); 
     	ImageM imageModifiee = new ImageM(tab);
     	
@@ -144,14 +97,14 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
             
             pointEnCours += 1;
         }
-    	   	
     	
         remplirForme(imageMGauche);
     	
         String outputPath = "./FormesSimples/image_+"+System.currentTimeMillis()+".jpg";
         imageModifiee.saveImage(outputPath);
     }
-	private void drawLine(ImageM image, Point depart, Point arrivee) {
+
+	public void drawLine(ImageM image, Point depart, Point arrivee) {
         Pixel[][] tab = image.getTab();
     	int x0 = (int) depart.getX();
         int y0 = (int) depart.getY();
@@ -181,7 +134,7 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
             }
         }
     }
-	private void remplirForme(ImageM image) {
+	public void remplirForme(ImageM image) {
         Pixel[][] tab = image.getTab();
     	for (int y = 0; y < image.getHauteur()-1; y++) {
             for (int x = 0; x < image.getLargeur()-1; x++) {

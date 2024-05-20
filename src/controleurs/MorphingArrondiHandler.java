@@ -17,36 +17,21 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class MorphingArrondiHandler implements EventHandler<ActionEvent> {
-    private TextField champEtapes;
-    private TextField champDelai;
+public class MorphingArrondiHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
     
     public MorphingArrondiHandler(TextField champEtapes, TextField champDelai) {
-        this.champEtapes = champEtapes;
-        this.champDelai = champDelai;
-        }
+        super(champEtapes, champDelai); 
+    }
 
     @Override
     public void handle(ActionEvent event) {
         
-        int nbEtapes = Integer.parseInt(champEtapes.getText());
-        int delai = Integer.parseInt(champDelai.getText());
+        int nbEtapes = Integer.parseInt(getChampEtapes().getText());
+        int delai = Integer.parseInt(getChampDelai().getText());
         
         System.out.println("Nombre d'etapes : " + nbEtapes + ", delai (ms) : " + delai);
 
-        //création dossier pour stocker images (.jpg)
-        File dossier = new File("./FormesSimples");
-        // Vérifier si le dossier existe
-        if (dossier.exists() && dossier.isDirectory()) {
-            //suppression et création du dossier
-            System.out.println("Le dossier existe.");
-            supprimerDossier(dossier);
-            dossier.mkdirs();
-        } else {
-            System.out.println("Le dossier n'existe pas.");
-            //création du dossier
-            dossier.mkdirs();
-        }
+        dossierFormeSimples(); 
 
         for (int i = 0; i <= nbEtapes; i++) {
             calculEnsemblePointSuivant(nbEtapes);
@@ -70,36 +55,6 @@ public class MorphingArrondiHandler implements EventHandler<ActionEvent> {
         }
         catch(Exception exceptionGIF){
             System.err.println("Erreur lors de la mise en GIF");
-        }
-    }
-
-    private void calculEnsemblePointSuivant(int nbEtapes) {
-        for (Map.Entry<Character, Point> entry : PointsControleHandler.pointsControleDebut.entrySet()) {
-            Character key = entry.getKey();
-            Point pointDebut = entry.getValue();
-            Point pointFin = PointsControleHandler.pointsControleFin.get(key);
-            calculPointSuivant(pointDebut, pointFin, nbEtapes);
-        }
-    }
-    private void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
-        double diffX = pointFin.getX()-pointDebut.getX();
-        double diffY = pointFin.getY()-pointDebut.getY();
-        
-        if(diffX>= 0) {
-        	double ajoutX = diffX/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()+ajoutX);
-        }
-        else {
-        	double retraitX = (-diffX)/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()-retraitX);
-        }
-        if(diffY>= 0) {
-        	double ajoutY = diffY/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()+ajoutY);
-        }
-        else {
-        	double retraitY = (-diffY)/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()-retraitY);
         }
     }
 
@@ -146,7 +101,7 @@ public class MorphingArrondiHandler implements EventHandler<ActionEvent> {
         }
     }
 
-    private void saveAsImage(Scene scene, String fileName) {
+    public void saveAsImage(Scene scene, String fileName) {
         WritableImage image = new WritableImage((int) scene.getWidth(), (int) scene.getHeight());
         scene.snapshot(image);
         //attribution d'un nom unique pour chaque image générée
@@ -161,21 +116,5 @@ public class MorphingArrondiHandler implements EventHandler<ActionEvent> {
             System.out.println("Erreur lors de l'enregistrement de l'image : " + e.getMessage());
         }
     }
-    //permet de supprimer un dossier
-    public static boolean supprimerDossier(File dossier) {
-        if (dossier.isDirectory()) {
-            // Récupérer la liste des fichiers et sous-dossiers du dossier
-            File[] fichiers = dossier.listFiles();
-            if (fichiers != null) {
-                for (File fichier : fichiers) {
-                    // Récursivement supprimer chaque fichier ou sous-dossier
-                    if (!supprimerDossier(fichier)) {
-                        return false; // Arrêter si la suppression échoue pour l'un des fichiers
-                    }
-                }
-            }
-        }
-        // Supprimer le dossier lui-même après avoir supprimé son contenu
-        return dossier.delete();
-    }
+    
 }
