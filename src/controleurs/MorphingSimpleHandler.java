@@ -11,26 +11,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
-public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
-    private TextField champEtapes;
-    private TextField champDelai;
+public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
     private ImageView imageGauche;
     private String imagePath;
     
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche) {
-        this.champEtapes = champEtapes;
-        this.champDelai = champDelai;
+        super(champEtapes, champDelai); 
         this.imageGauche= imageGauche;
-        }
+    }
 
     @Override
     public void handle(ActionEvent event) {
 
-        int nbEtapes = Integer.parseInt(champEtapes.getText());
-        int delai = Integer.parseInt(champDelai.getText());
+        int nbEtapes = Integer.parseInt(getChampEtapes().getText());
+        int delai = Integer.parseInt(getChampDelai().getText());
         
-        //vide Dossier
-        videDossierFormeSimples();
+        dossierFormeSimples();
         
         javafx.scene.image.Image image = imageGauche.getImage();
         
@@ -63,59 +59,7 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         convertisseur.convertirEnGif(delai);
         
     }
-    
-    public void videDossierFormeSimples() {
-    	String directoryPath = "./FormesSimples";
-        File directory = new File(directoryPath);
-        
-        //si repertoire trouve, supprime tous les fichiers contenu dans ce repertoire
-        if (directory.exists() && directory.isDirectory()) {
-            File[] contents = directory.listFiles();
-            if (contents != null) {
-                for (File file : contents) {
-                    file.delete(); // Supprime le fichier ou le dossier
-                }
-            }
-        }
-    }
-    
-    public void calculEnsemblePointSuivant(int nbEtapes) {
-    	
-    	//boucle qui calcule pour chaque point de controle, la position de ce point a l'etape +1
-    	for (Map.Entry<Character, Point> entry : PointsControleHandler.getPointsControleDebut().entrySet()) {
-        	Character key = entry.getKey();
-            Point pointDebut = entry.getValue();
-            Point pointFin = PointsControleHandler.getPointsControleFin().get(key);
-            
-            calculPointSuivant(pointDebut, pointFin, nbEtapes);
-        }
-    }
-    
-    public void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
-    	
-    	//calcule les differences d'abscisses et d'ordonnes
-    	double diffX = pointFin.getX()-pointDebut.getX();
-        double diffY = pointFin.getY()-pointDebut.getY();
-        
-        //gestion des valeurs d'ajout/retrait pour atteindre les points suivants (en gros atteindre l'etape suivante)
-        if(diffX>= 0) {
-        	double ajoutX = diffX/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()+ajoutX);
-        }
-        else {
-        	double retraitX = (-diffX)/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()-retraitX);
-        }
-        if(diffY>= 0) {
-        	double ajoutY = diffY/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()+ajoutY);
-        }
-        else {
-        	double retraitY = (-diffY)/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()-retraitY);
-        }
-    }
-    
+
     public ImageM modifFondImage(ImageM imageMGauche) {
         Pixel[][] tab = imageMGauche.getTab(); 
     	//boucle sur tous les pixels de l'image pour les rendre blancs
@@ -167,7 +111,6 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
             
             pointEnCours += 1;
         }
-    	   	
     	
         remplirForme(imageMGauche);
     	
