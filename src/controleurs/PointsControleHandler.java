@@ -20,12 +20,12 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
     private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private int[] alphabetIndex = {0};
 
-    public static Map<Character, Point> pointsControleDebut = new HashMap<>();
-    public static Map<Character, Point> pointsControleFin = new HashMap<>();
+    private static Map<Character, Point> pointsControleDebut = new HashMap<>();
+    private static Map<Character, Point> pointsControleFin = new HashMap<>();
 
     public PointsControleHandler (StackPane leftPane, StackPane rightPane){
         this.leftPane = leftPane; 
-        this.rightPane = rightPane; 
+        this.rightPane = rightPane;
     }
 
     @Override
@@ -132,5 +132,11 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
             rightPane.getChildren().remove(i); 
         }
         alphabetIndex[0]=0;  
+    }
+    public static Map<Character, Point>getPointsControleDebut() {
+    	return pointsControleDebut;
+    }
+    public static Map<Character, Point>getPointsControleFin() {
+    	return pointsControleFin;
     }
 }
