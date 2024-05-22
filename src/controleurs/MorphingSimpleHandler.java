@@ -14,10 +14,12 @@ import javafx.scene.control.TextField;
 public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
     private ImageView imageGauche;
     private String imagePath;
+    private PointsControleHandler handler; 
     
-    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche) {
+    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
         super(champEtapes, champDelai); 
         this.imageGauche= imageGauche;
+        this.handler = handler;
     }
 
     @Override
@@ -57,7 +59,7 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         //convertie les images en gif
         ConvertisseurGIF convertisseur = new ConvertisseurGIF();
         convertisseur.convertirEnGif(delai);
-        
+        handler.handleReset(event);
     }
 
     public ImageM modifFondImage(ImageM imageMGauche) {
