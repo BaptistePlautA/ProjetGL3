@@ -1,67 +1,61 @@
 
 package controleurs;
 
-import java.util.Map;
+import javafx.scene.image.ImageView;
 import utilitaires.*;
-
+import java.io.File;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
-public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
-    private TextField champEtapes;
-    private TextField champDelai;
+public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
+    private ImageView imageGauche;
+    private String imagePath;
+    private PointsControleHandler handler; 
     
-    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai) {
-        this.champEtapes = champEtapes;
-        this.champDelai = champDelai;
-        }
+    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
+        super(champEtapes, champDelai); 
+        this.imageGauche= imageGauche;
+        this.handler = handler;
+    }
 
     @Override
     public void handle(ActionEvent event) {
 
-        int nbEtapes = Integer.parseInt(champEtapes.getText());
-        int delai = Integer.parseInt(champDelai.getText());
+        int nbEtapes = Integer.parseInt(getChampEtapes().getText());
+        int delai = Integer.parseInt(getChampDelai().getText());
         
-        System.out.println("Nombre d'etapes : " + nbEtapes + ", delai (ms) : " + delai);
+        dossierFormeSimples();
         
-        while(nbEtapes>=0) {
+        javafx.scene.image.Image image = imageGauche.getImage();
+        
+        //si image non nulle, recupere le chemin de l'image et le stocke (en enlevant le début de la chaine 'file:\\'
+        if (image != null) {
+            String imagePath = image.getUrl();
+            
+            File file = new File(imagePath);
+            String cheminImage = file.getPath();
+            
+            this.imagePath = cheminImage.substring("file:\\".length());
+        }
+        
+        //creer le tableau de pixel de l'image et unifie son fond et le stocke
+        ImageM imageFondModifie = modifFondImage(new ImageM(imagePath));
+        
+        //colore les points de contrôle de début, trace les droites entre ceux-ci et colore
+        colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
+        
+        //boucle tant qu'on a pas atteint le nombre d'etapes demande
+        while(nbEtapes>0) {
         	calculEnsemblePointSuivant(nbEtapes);
-        	
+        	modifFondImage(imageFondModifie);
+        	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
         	nbEtapes-=1;
         }
         
-    }
-    private void calculEnsemblePointSuivant(int nbEtapes) {
-    	
-    	for (Map.Entry<Character, Point> entry : PointsControleHandler.pointsControleDebut.entrySet()) {
-        	Character key = entry.getKey();
-            Point pointDebut = entry.getValue();
-            Point pointFin = PointsControleHandler.pointsControleFin.get(key);
-            
-            System.out.println(key+" : ("+pointDebut.getX()+","+pointDebut.getY()+")");
-            calculPointSuivant(pointDebut, pointFin, nbEtapes);
-        }
-    }
-    private void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
-    	double diffX = pointFin.getX()-pointDebut.getX();
-        double diffY = pointFin.getY()-pointDebut.getY();
-        
-        if(diffX>= 0) {
-        	double ajoutX = diffX/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()+ajoutX);
-        }
-        else {
-        	double retraitX = (-diffX)/nbEtapes;
-        	pointDebut.setX(pointDebut.getX()-retraitX);
-        }
-        if(diffY>= 0) {
-        	double ajoutY = diffY/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()+ajoutY);
-        }
-        else {
-        	double retraitY = (-diffY)/nbEtapes;
-        	pointDebut.setY(pointDebut.getY()-retraitY);
-        }
+        //convertie les images en gif
+        ConvertisseurGIF convertisseur = new ConvertisseurGIF();
+        convertisseur.convertirEnGif(delai);
+        handler.handleReset(event);
     }
 }
