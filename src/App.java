@@ -135,7 +135,7 @@ public class App extends Application {
         Label delaiLabel = new Label("Délai (ms):");
         
         Button boutonMorphing = new Button("Morphisme");
-        boutonMorphing.setOnAction(new MorphingSimpleHandler(champEtapes, champDelai));
+        boutonMorphing.setOnAction(new MorphingSimpleHandler(champEtapes, champDelai, imageGauche, handler));
         
         VBox midBox = new VBox(10, boutonMorphing, boutonReset,champEtapes,etapesLabel,champDelai,delaiLabel);
         midBox.setAlignment(Pos.CENTER);
@@ -266,7 +266,7 @@ public class App extends Application {
         
         ///Génération de la Scène
         sceneArrondie = new Scene(borderpaneMethodeArrondi, 1020, 700);
-        sceneArrondie.getStylesheets().add("app.css");
+        //sceneArrondie.getStylesheets().add("app.css");
         ////////////////////////////////////FIN : Scene 2 : Morphisme d'images arrondies
 
         primaryStage.setTitle("Application de Morphing");
