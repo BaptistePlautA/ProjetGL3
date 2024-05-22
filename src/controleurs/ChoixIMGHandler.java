@@ -5,7 +5,10 @@ import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
+import javafx.embed.swing.SwingFXUtils;
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 
 public class ChoixIMGHandler implements EventHandler<ActionEvent> {
     private ImageView imageView;
@@ -23,7 +26,8 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
             Image scaledImage = scaleImage(image, 300, 300);
-            imageView.setImage(scaledImage);
+            saveImageToFile(scaledImage, "./bin/", "scaled_" + selectedFile.getName());
+            imageView.setImage(new Image("scaled_"+selectedFile.getName()));
         }
     }
     
@@ -34,5 +38,14 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
         imageView.setFitWidth(largeur);
         imageView.setFitHeight(hauteur);
         return imageView.snapshot(null, null);
+    }
+    
+    private void saveImageToFile(Image image, String directoryPath, String fileName) {
+        File outputFile = new File(directoryPath, fileName);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

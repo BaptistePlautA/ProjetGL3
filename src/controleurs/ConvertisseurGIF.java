@@ -35,6 +35,7 @@ public class ConvertisseurGIF {
                     }
                 }
             }
+
             // Convertir la liste d'images en GIF
             createAnimatedGif(outputGIF, imageList, delai);
 
