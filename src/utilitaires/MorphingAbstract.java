@@ -5,15 +5,21 @@ import java.util.Map;
 
 import controleurs.PointsControleHandler;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 
 public abstract class MorphingAbstract {
 
     private TextField champEtapes;
     private TextField champDelai;
+    private ImageView imageGauche;
+    private String imagePath;
+    private PointsControleHandler handler;
 
-    public MorphingAbstract(TextField champEtapes, TextField champDelai) {
+    public MorphingAbstract(TextField champEtapes, TextField champDelai,ImageView imageGauche, PointsControleHandler handler) {
         this.champEtapes = champEtapes;
         this.champDelai = champDelai;
+        this.imageGauche= imageGauche;
+        this.handler = handler;
     }
 
     public TextField getChampEtapes(){
@@ -22,6 +28,22 @@ public abstract class MorphingAbstract {
 
     public TextField getChampDelai(){
         return champDelai; 
+    }
+
+    public ImageView getImageGauche(){
+        return imageGauche; 
+    }
+
+    public String getImagePath(){
+        return imagePath; 
+    }
+
+    public PointsControleHandler getHandler(){
+        return handler; 
+    }
+
+    public void setImagePath(String imagePath){
+        this.imagePath = imagePath; 
     }
     
     protected void calculEnsemblePointSuivant(int nbEtapes) {
