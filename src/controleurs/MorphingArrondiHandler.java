@@ -10,14 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
 public class MorphingArrondiHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
-    private ImageView imageGauche;
-    private String imagePath;
-    private PointsControleHandler handler;
-
+    
     public MorphingArrondiHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
-        super(champEtapes, champDelai); 
-        this.imageGauche= imageGauche;
-        this.handler = handler;
+        super(champEtapes, champDelai, imageGauche, handler); 
     }
 
     @Override
@@ -29,7 +24,7 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
         System.out.println("Nombre d'etapes : " + nbEtapes + ", delai (ms) : " + delai);
 
         dossierFormeSimples(); 
-        javafx.scene.image.Image image = imageGauche.getImage();
+        javafx.scene.image.Image image = getImageGauche().getImage();
 
         //si image non nulle, recupere le chemin de l'image et le stocke (en enlevant le début de la chaine 'file:\\'
         if (image != null) {
@@ -38,21 +33,21 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
             File file = new File(imagePath);
             String cheminImage = file.getPath();
             
-            this.imagePath = cheminImage.substring("file:\\".length());
+            setImagePath(cheminImage.substring("file:\\".length()));
         }
 
         //creer le tableau de pixel de l'image et unifie son fond et le stocke
-        ImageM imageFondModifie = modifFondImage(new ImageM(imagePath));
+        ImageM imageFondModifie = modifFondImage(new ImageM(getImagePath()));
         
+        //calculs et coloration de la forme de début 
+        Map<Character, Point> pointsCalculesImageDebut = traceCourbeBezier(PointsControleHandler.getPointsControleDebut());
+        colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut);
 
-        //colore les points de contrôle de début, trace les droites entre ceux-ci et colore
-        colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
-        Map<Character, Point> pointsCalcules = new HashMap<>(); 
         //boucle tant qu'on a pas atteint le nombre d'etapes demande
         while(nbEtapes>0) {
         	calculEnsemblePointSuivant(nbEtapes);
         	modifFondImage(imageFondModifie);
-            pointsCalcules = traceCourbeBezier(PointsControleHandler.getPointsControleDebut()); 
+            Map<Character, Point> pointsCalcules  = traceCourbeBezier(PointsControleHandler.getPointsControleDebut()); 
         	colorPointsDeControle(imageFondModifie, pointsCalcules);
         	nbEtapes-=1;
         }
@@ -65,7 +60,7 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
         catch(Exception exceptionGIF){
             System.err.println("Erreur lors de la mise en GIF");
         }
-        handler.handleReset(event);
+        getHandler().handleReset(event);
     }
 
     public Map<Character, Point> traceCourbeBezier(Map<Character, Point> controlPoints) {

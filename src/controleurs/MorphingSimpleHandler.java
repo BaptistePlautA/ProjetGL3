@@ -9,14 +9,9 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
-    private ImageView imageGauche;
-    private String imagePath;
-    private PointsControleHandler handler; 
     
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
-        super(champEtapes, champDelai); 
-        this.imageGauche= imageGauche;
-        this.handler = handler;
+        super(champEtapes, champDelai, imageGauche, handler); 
     }
 
     @Override
@@ -27,7 +22,7 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         
         dossierFormeSimples();
         
-        javafx.scene.image.Image image = imageGauche.getImage();
+        javafx.scene.image.Image image = getImageGauche().getImage();
         
         //si image non nulle, recupere le chemin de l'image et le stocke (en enlevant le début de la chaine 'file:\\'
         if (image != null) {
@@ -35,12 +30,12 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
             
             File file = new File(imagePath);
             String cheminImage = file.getPath();
-            
-            this.imagePath = cheminImage.substring("file:\\".length());
+        
+            setImagePath(cheminImage.substring("file:\\".length()));
         }
         
         //creer le tableau de pixel de l'image et unifie son fond et le stocke
-        ImageM imageFondModifie = modifFondImage(new ImageM(imagePath));
+        ImageM imageFondModifie = modifFondImage(new ImageM(getImagePath()));
         
         //colore les points de contrôle de début, trace les droites entre ceux-ci et colore
         colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
@@ -56,6 +51,6 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         //convertie les images en gif
         ConvertisseurGIF convertisseur = new ConvertisseurGIF();
         convertisseur.convertirEnGif(delai);
-        handler.handleReset(event);
+        getHandler().handleReset(event);
     }
 }
