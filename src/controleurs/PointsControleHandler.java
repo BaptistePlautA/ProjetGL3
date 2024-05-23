@@ -133,10 +133,10 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
         }
         alphabetIndex[0]=0;  
     }
-    public static Map<Character, Point>getPointsControleDebut() {
+    public static Map<Character, Point> getPointsControleDebut() {
     	return pointsControleDebut;
     }
-    public static Map<Character, Point>getPointsControleFin() {
+    public static Map<Character, Point> getPointsControleFin() {
     	return pointsControleFin;
     }
 }
