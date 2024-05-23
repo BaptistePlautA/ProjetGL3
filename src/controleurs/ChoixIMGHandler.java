@@ -34,7 +34,7 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
     //Scale automatiquement l'image
     private Image scaleImage(Image image, double largeur, double hauteur) {
         ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
+        imageView.setPreserveRatio(false);
         imageView.setFitWidth(largeur);
         imageView.setFitHeight(hauteur);
         return imageView.snapshot(null, null);
