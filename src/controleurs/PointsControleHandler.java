@@ -35,16 +35,18 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
         double x = event.getX();
         double y = event.getY();
 
-        Point pointDebut = new Point(x, y);
-        Point pointFin = new Point(x, y);
-
-        char label = alphabet.charAt(alphabetIndex[0]);
-        alphabetIndex[0]++;
-
-        pointsControleDebut.put(label, pointDebut);
-        pointsControleFin.put(label, pointFin);
-        
-        afficher(pointDebut, pointFin, label);
+        if ((0<=x && x<=300) && (0<=y && y<+300)){
+            Point pointDebut = new Point(x, y);
+            Point pointFin = new Point(x, y);
+    
+            char label = alphabet.charAt(alphabetIndex[0]);
+            alphabetIndex[0]++;
+    
+            pointsControleDebut.put(label, pointDebut);
+            pointsControleFin.put(label, pointFin);
+            
+            afficher(pointDebut, pointFin, label);
+        }
     }
 
     public void handlePanePress(MouseEvent event, Point p) {
@@ -83,8 +85,24 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
             indiceText.setTranslateY(indiceText.getTranslateY() + deltaY);
         }
 
-        p.setX(p.getX() + deltaX);
-        p.setY(p.getY() + deltaY);
+        double x = p.getX() + deltaX; 
+        double y = p.getY() + deltaY;
+
+        if (x<299 && x>0){
+            p.setX(x); 
+        }else if (x<0){
+            p.setX(0);
+        }else{
+            p.setX(299);
+        }
+
+        if (y<299 && y>0){
+            p.setY(y);
+        }else if (y<0){
+            p.setY(0);
+        } else{
+            p.setY(299);
+        }
     }
 
     public void handleMouseRelease(MouseEvent event) {
