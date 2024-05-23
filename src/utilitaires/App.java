@@ -1,3 +1,5 @@
+package utilitaires;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import utilitaires.Point;
 
 import java.io.File;
 import java.util.function.UnaryOperator;
