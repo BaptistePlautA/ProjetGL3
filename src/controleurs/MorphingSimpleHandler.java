@@ -38,6 +38,7 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
         Image image = imageGauche.getImage();
         System.out.println(image.getHeight());
         System.out.println(image.getWidth());
+        System.out.println(image.getUrl());
         //si image non nulle, recupere le chemin de l'image et le stocke (en enlevant le début de la chaine 'file:\\')
         if (image != null) {
             String imagePath = image.getUrl();
@@ -218,11 +219,15 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
     }
     public void remplirForme(ImageM image) {
         Pixel[][] tab = image.getTab();
+        System.out.println(tab.length);
     	//boucle pour colorer en vert tous les pixels se situants a droite d'un pixel noir, et de colorer en blanc tous les pixels verts situes sous un pixel blanc
     	for (int y = 0; y < image.getHauteur()-1; y++) {
             for (int x = 0; x < image.getLargeur()-1; x++) {
             	//si pixel est noir et case a droite est blanche, colore la case de droite en vert
-                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0))  {
+            	//System.out.println(x+","+y);
+            	//System.out.println(tab[x+1][y].getR());
+                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0) && (x<image.getLargeur()-2))  {
+                	//System.out.println("rentre 1");
                 	if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
                 		tab[x+1][y].setR(0);
                 		tab[x+1][y].setV(255);
@@ -230,7 +235,8 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
                     }
                 }
                 //si pixel est vert et pixel du dessus est blanc, colore la case en blanc
-                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
+                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0) && (y>0)) {
+                	//System.out.println("rentre 2");
                 	if ((tab[x][y-1].getR() == 255) && (tab[x][y-1].getV() == 255) && (tab[x][y-1].getB() == 255)) {
                 		tab[x][y].setR(255);
                 		tab[x][y].setV(255);
@@ -238,7 +244,8 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
                     }
                 }
                 //si pixel vert et pixel de droite est blanc, colore la case de droite en vert
-                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
+                if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0) && (x<image.getLargeur()-1)) {
+                	//System.out.println("rentre 3");
                 	if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
                 		tab[x+1][y].setR(0);
                 		tab[x+1][y].setV(255);
@@ -253,16 +260,20 @@ public class MorphingSimpleHandler implements EventHandler<ActionEvent> {
     	    for (int x = image.getLargeur() - 1; x >= 0; x--) {
     	    	//si pixel est vert et pixel de droite/dessous est blanc, colore la case en blanc
     	        if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
-    	            if (x + 1 < image.getLargeur() && (tab[x + 1][y].getR() == 255) && (tab[x + 1][y].getV() == 255) && (tab[x + 1][y].getB() == 255)) {
-    	                tab[x][y].setR(255);
-    	                tab[x][y].setV(255);
-    	                tab[x][y].setB(255);
+    	        	if(x<image.getLargeur()-1) {
+	    	            if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
+	    	                tab[x][y].setR(255);
+	    	                tab[x][y].setV(255);
+	    	                tab[x][y].setB(255);
+	    	            }
     	            }
-    	            if (y - 1 >= 0 && (tab[x][y + 1].getR() == 255) && (tab[x][y + 1].getV() == 255) && (tab[x][y + 1].getB() == 255)) {
-    	                tab[x][y].setR(255);
-    	                tab[x][y].setV(255);
-    	                tab[x][y].setB(255);
-    	            }
+    	        	if(y<image.getHauteur()-1) {
+	    	            if ((tab[x][y+1].getR() == 255) && (tab[x][y+1].getV() == 255) && (tab[x][y+1].getB() == 255)) {
+	    	                tab[x][y].setR(255);
+	    	                tab[x][y].setV(255);
+	    	                tab[x][y].setB(255);
+	    	            }
+    	        	}
     	        }
     	        //si pixel est noir, le colore en vert
     	        if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0)) {
