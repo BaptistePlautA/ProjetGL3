@@ -207,26 +207,33 @@ public abstract class MorphingAbstract {
             for (int x = 0; x < image.getLargeur()-1; x++) {
             	//si pixel est noir et case a droite est blanche, colore la case de droite en vert
                 if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0))  {
-                	if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
-                		tab[x+1][y].setR(0);
-                		tab[x+1][y].setV(255);
-                		tab[x+1][y].setB(0);
+                    if (x<299){
+                        if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
+                            tab[x+1][y].setR(0);
+                            tab[x+1][y].setV(255);
+                            tab[x+1][y].setB(0);
+                        }
                     }
                 }
                 //si pixel est vert et pixel du dessus est blanc, colore la case en blanc
                 if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
-                	if ((tab[x][y-1].getR() == 255) && (tab[x][y-1].getV() == 255) && (tab[x][y-1].getB() == 255)) {
-                		tab[x][y].setR(255);
-                		tab[x][y].setV(255);
-                		tab[x][y].setB(255);
+                    if (y>1){
+                        if ((tab[x][y-1].getR() == 255) && (tab[x][y-1].getV() == 255) && (tab[x][y-1].getB() == 255)) {
+                            tab[x][y].setR(255);
+                            tab[x][y].setV(255);
+                            tab[x][y].setB(255);
+                        }
                     }
+                	
                 }
                 //si pixel vert et pixel de droite est blanc, colore la case de droite en vert
                 if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
-                	if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
-                		tab[x+1][y].setR(0);
-                		tab[x+1][y].setV(255);
-                		tab[x+1][y].setB(0);
+                    if (x<299){
+                        if ((tab[x+1][y].getR() == 255) && (tab[x+1][y].getV() == 255) && (tab[x+1][y].getB() == 255)) {
+                            tab[x+1][y].setR(0);
+                            tab[x+1][y].setV(255);
+                            tab[x+1][y].setB(0);
+                        }
                     }
                 }
             }
@@ -237,16 +244,20 @@ public abstract class MorphingAbstract {
     	    for (int x = image.getLargeur() - 1; x >= 0; x--) {
     	    	//si pixel est vert et pixel de droite/dessous est blanc, colore la case en blanc
     	        if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 255) && (tab[x][y].getB() == 0)) {
-    	            if (x + 1 < image.getLargeur() && (tab[x + 1][y].getR() == 255) && (tab[x + 1][y].getV() == 255) && (tab[x + 1][y].getB() == 255)) {
-    	                tab[x][y].setR(255);
-    	                tab[x][y].setV(255);
-    	                tab[x][y].setB(255);
-    	            }
-    	            if (y - 1 >= 0 && (tab[x][y + 1].getR() == 255) && (tab[x][y + 1].getV() == 255) && (tab[x][y + 1].getB() == 255)) {
-    	                tab[x][y].setR(255);
-    	                tab[x][y].setV(255);
-    	                tab[x][y].setB(255);
-    	            }
+                    if (x<299){
+                        if (x + 1 < image.getLargeur() && (tab[x + 1][y].getR() == 255) && (tab[x + 1][y].getV() == 255) && (tab[x + 1][y].getB() == 255)) {
+                            tab[x][y].setR(255);
+                            tab[x][y].setV(255);
+                            tab[x][y].setB(255);
+                        }
+                    }
+                    if (y>1){
+                        if (y - 1 >= 0 && (tab[x][y + 1].getR() == 255) && (tab[x][y + 1].getV() == 255) && (tab[x][y + 1].getB() == 255)) {
+                            tab[x][y].setR(255);
+                            tab[x][y].setV(255);
+                            tab[x][y].setB(255);
+                        }
+                    }   
     	        }
     	        //si pixel est noir, le colore en vert
     	        if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0)) {
