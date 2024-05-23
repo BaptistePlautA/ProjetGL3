@@ -6,6 +6,9 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
 import java.io.File;
+import javafx.embed.swing.SwingFXUtils;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
 public class ChoixIMGHandler implements EventHandler<ActionEvent> {
     private ImageView imageView;
