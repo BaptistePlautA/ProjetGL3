@@ -23,7 +23,8 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
             Image scaledImage = scaleImage(image, 300, 300);
-            imageView.setImage(scaledImage);
+            saveImageToFile(scaledImage, "./bin/", "scaled_" + selectedFile.getName());
+            imageView.setImage(new Image("scaled_"+selectedFile.getName()));
         }
     }
     
@@ -34,5 +35,15 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
         imageView.setFitWidth(largeur);
         imageView.setFitHeight(hauteur);
         return imageView.snapshot(null, null);
+    }
+
+    //enregistre l'image en fichier danas le bin
+    private void saveImageToFile(Image image, String directoryPath, String fileName) {
+        File outputFile = new File(directoryPath, fileName);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
