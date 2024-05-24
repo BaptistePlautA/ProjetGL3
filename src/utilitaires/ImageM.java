@@ -53,9 +53,11 @@ public class ImageM {
     public Pixel[][] getTab(){
         return tab; 
     }
+
+    public void setTab(Pixel[][] tab) {
+        this.tab = tab;
+    }
     
-
-
     public void saveImage(String outputPath) {
         int width = tab[0].length;
         int height = tab.length;
@@ -77,33 +79,5 @@ public class ImageM {
             e.printStackTrace();
         }
     }
-    
-/* 
-    public static void main(String[] args) {
-        // Chemin vers l'image à charger
-        String imagePath = "/home/cytech/Desktop/FormesSimples/croix.jpg";
 
-        // Création de l'objet ImageM en chargeant l'image
-        ImageM image = new ImageM(imagePath);
-
-        // Affichage de la hauteur et de la largeur de l'image
-        System.out.println("Hauteur de l'image : " + image.getHauteur());
-        System.out.println("Largeur de l'image : " + image.getLargeur());
-
-        // Accès aux pixels de l'image
-        Pixel[][] pixelArray = image.tab; // Accès direct au tableau de pixels
-
-        // Exemple d'utilisation : affichage des valeurs des pixels de l'image
-        for (int y = 0; y < image.getHauteur(); y++) {
-            for (int x = 0; x < image.getLargeur(); x++) {
-                Pixel pixel = pixelArray[y][x];
-                System.out.println("Pixel : (" + x + "," + y + "): R=" + pixel.getR() + ", G=" + pixel.getV() + ", B=" + pixel.getB());
-            }
-        }
-
-        // Test conversion tab -> image
-        ImageM imageTest = new ImageM(pixelArray);
-        imageTest.saveImage("/home/cytech/Desktop/test.jpg");
-    }
-*/
 }

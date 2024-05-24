@@ -5,9 +5,9 @@ import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
+import java.io.File;
 import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
 
 public class ChoixIMGHandler implements EventHandler<ActionEvent> {
@@ -34,12 +34,13 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
     //Scale automatiquement l'image
     private Image scaleImage(Image image, double largeur, double hauteur) {
         ImageView imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
+        imageView.setPreserveRatio(false);
         imageView.setFitWidth(largeur);
         imageView.setFitHeight(hauteur);
         return imageView.snapshot(null, null);
     }
-    
+
+    //enregistre l'image en fichier danas le bin
     private void saveImageToFile(Image image, String directoryPath, String fileName) {
         File outputFile = new File(directoryPath, fileName);
         try {
