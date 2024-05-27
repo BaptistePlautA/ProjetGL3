@@ -6,7 +6,7 @@ public class Pixel {
 
     public Pixel (int r, int v, int b){
         this.r = r; 
-        this.v = v; 
+        this.v = v;
         this.b = b; 
     }
 

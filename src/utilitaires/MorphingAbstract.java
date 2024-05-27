@@ -29,7 +29,7 @@ public abstract class MorphingAbstract {
     }
 
     public TextField getChampDelai(){
-        return champDelai; 
+        return champDelai;
     }
 
     public ImageView getImageGauche(){
@@ -145,8 +145,6 @@ public abstract class MorphingAbstract {
     	int[] pixelForme = {0, 255, 0};
     	if(premierPixel != null){
     		pixelFond = premierPixel;
-    	}else {
-        	System.out.println("fond est inexistant");
     	}
     	if(secondPixel != null) {
 			pixelForme = secondPixel;

@@ -16,14 +16,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 import controleurs.*; 
 
 import java.util.HashMap;
-import java.util.Map; 
+import java.util.Map;
 
 public class App extends Application {
 
@@ -40,7 +39,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
 
         // Setup de l'icône de l'app
-        Image icon = new Image(getClass().getResourceAsStream("../icon.png"));
+        Image icon = new Image(getClass().getResourceAsStream("../ImagesFX/icon.png"));
         primaryStage.getIcons().add(icon);
 
         ////////////////////////////////////Scene 0 : Menu
@@ -64,10 +63,9 @@ public class App extends Application {
         mainMenu.setAlignment(Pos.CENTER);
 
         mainMenuScene = new Scene(mainMenu, 1020, 700);
-        mainMenuScene.getStylesheets().add("app.css");
+        mainMenuScene.getStylesheets().add("ImagesFX/app.css");
         primaryStage.setScene(mainMenuScene);
         ////////////////////////////////////FIN Scene 0 : Menu
-
         
         
         
@@ -165,7 +163,7 @@ public class App extends Application {
         
         ///Génération de la Scène
         sceneSimple = new Scene(borderpaneMethodeSimple, 1020, 700);
-        sceneSimple.getStylesheets().add("app.css");
+        sceneSimple.getStylesheets().add("ImagesFX/app.css");
         ////////////////////////////////////FIN : Scene 1 : Morphisme d'images simples
 
         
@@ -275,7 +273,8 @@ public class App extends Application {
 
     }
     
-    private TextField creerChampNbEntier(String initialValue) {
+
+	private TextField creerChampNbEntier(String initialValue) {
         TextField champTexte = new TextField(initialValue);
         champTexte.setPrefWidth(50);
 
@@ -297,7 +296,7 @@ public class App extends Application {
     //Initialiser les images (toutes les scènes)
     private ImageView creerImageView() {
         ImageView imageView = new ImageView();
-        imageView.setImage(new Image("left.png"));
+        imageView.setImage(new Image("ImagesFX/left.png"));
         imageView.setFitWidth(300);
         imageView.setFitHeight(300);
         imageView.getStyleClass().add("imageView");
@@ -306,7 +305,7 @@ public class App extends Application {
     
     //Méthode pour créer le bouton de retour
     private Button creerBoutonRetour(Scene scene) {
-        Image imageRetour = new Image(getClass().getResourceAsStream("../return.png"));
+        Image imageRetour = new Image(getClass().getResourceAsStream("../ImagesFX/return.png"));
         ImageView imageRetourView = new ImageView(imageRetour);
         imageRetourView.setFitWidth(15);
         imageRetourView.setFitHeight(15);

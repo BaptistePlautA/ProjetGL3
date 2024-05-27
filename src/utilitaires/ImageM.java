@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 public class ImageM {
 	
-	private Pixel[][] tab; 
+	private Pixel[][] tab;
     
     public ImageM(String imagePath) {
         BufferedImage image = null;
