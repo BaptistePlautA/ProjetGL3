@@ -16,6 +16,7 @@ l'Appli se compose de 3 morphings différents :
 2. Déploiement
 3. Exemples d'utilisation
 4. Documentation
+5. Technologies utilisées
 ***
 
 ## Pré-requis
@@ -85,8 +86,13 @@ Possibilité de choisir l'image de départ et l'image d'arrivée en cliquant sur
 
 #### Image de gauche
 
-
 #### Image de droite
+
+#### Générer le morphing
+
+Choisir le nombre d'images de transition à générer et la vitesse de transitions entre les images du gif (en ms).
+
+Cliquer sur "morphing" pour générer le GIF.
 
 ***
 
@@ -113,3 +119,14 @@ Exemple d'un morphing d'images entre deux tableaux de Van Gogh :
 [BufferedImage pour le morphing d'images](https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html)
 
 [javaFX](https://docs.oracle.com/javase/8/javafx/api/toc.html)
+
+***
+## Technologies utilisées
+
+Ci-après une liste des différentes technologies utilisées pour notre projet :
+* [Eclipse](https://eclipseide.org/): Version 2023-03 (4.27.0)
+* [java](https://www.java.com/fr/): Version 17.0.6
+* [javaFX](https://openjfx.io/): Version 22.0.0
+* [github](https://github.com/)
+***
+
