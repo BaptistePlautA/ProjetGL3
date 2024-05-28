@@ -31,20 +31,30 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent arg0) {}
 
+    public static Map<Character, Point>getPointsControleDebut() {
+    	return pointsControleDebut;
+    }
+    public static Map<Character, Point>getPointsControleFin() {
+    	return pointsControleFin;
+    }
+
     public void handleLeftPaneClick(MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
 
-        Point pointDebut = new Point(x, y);
-        Point pointFin = new Point(x, y);
-
-        char label = alphabet.charAt(alphabetIndex[0]);
-        alphabetIndex[0]++;
-
-        pointsControleDebut.put(label, pointDebut);
-        pointsControleFin.put(label, pointFin);
+        if ((0<=x && x<=300) && (0<=y && y<+300)){
+            Point pointDebut = new Point(x, y);
+            Point pointFin = new Point(x, y);
+    
+            char label = alphabet.charAt(alphabetIndex[0]);
+            alphabetIndex[0]++;
+    
+            pointsControleDebut.put(label, pointDebut);
+            pointsControleFin.put(label, pointFin);
+            
+            afficher(pointDebut, pointFin, label);
+        }
         
-        afficher(pointDebut, pointFin, label);
     }
 
     public void handlePanePress(MouseEvent event, Point p) {
@@ -54,37 +64,54 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
     }
 
     public void handlePaneDrag(MouseEvent event, Point p, Circle cerclePointControle, Text indiceText) {
+        
         double mouseX = event.getX();
         double mouseY = event.getY();
 
         double deltaX = mouseX - pointEnCoursDeDeplacement.getX(); 
         double deltaY = mouseY - pointEnCoursDeDeplacement.getY(); 
 
-        double coordonnéeX = cerclePointControle.getTranslateX() + deltaX; 
-        double coordonnéeY = cerclePointControle.getTranslateY() + deltaY; 
+        double coordonneeX = cerclePointControle.getTranslateX() + deltaX; 
+        double coordonneeY = cerclePointControle.getTranslateY() + deltaY; 
 
         //check point x pas en dehors du pane 
-        if (coordonnéeX < 0 - rightPane.getWidth()/2){
+        if (coordonneeX < 0 - rightPane.getWidth()/2){
             cerclePointControle.setTranslateX(0 - rightPane.getWidth()/2); 
-        }else if (coordonnéeX > 0 + rightPane.getWidth()/2){
+        }else if (coordonneeX > 0 + rightPane.getWidth()/2){
             cerclePointControle.setTranslateX(0 + rightPane.getWidth()/2);
             
         }else{
-            cerclePointControle.setTranslateX(coordonnéeX);
+            cerclePointControle.setTranslateX(coordonneeX);
             indiceText.setTranslateX(indiceText.getTranslateX() + deltaX);
         }
         //check point y pas en dehors du pane
-        if (coordonnéeY < 0 - rightPane.getHeight()/2){
+        if (coordonneeY < 0 - rightPane.getHeight()/2){
             cerclePointControle.setTranslateY(0 - rightPane.getHeight()/2); 
-        }else if (coordonnéeY > 0 + rightPane.getHeight()/2){
+        }else if (coordonneeY > 0 + rightPane.getHeight()/2){
             cerclePointControle.setTranslateY(0 + rightPane.getHeight()/2);
         }else{
-            cerclePointControle.setTranslateY(coordonnéeY);
+            cerclePointControle.setTranslateY(coordonneeY);
             indiceText.setTranslateY(indiceText.getTranslateY() + deltaY);
         }
 
-        p.setX(p.getX() + deltaX);
-        p.setY(p.getY() + deltaY);
+        double x = p.getX() + deltaX; 
+        double y = p.getY() + deltaY;
+
+        if (x<299 && x>0){
+            p.setX(x); 
+        }else if (x<0){
+            p.setX(0);
+        }else{
+            p.setX(299);
+        }
+
+        if (y<299 && y>0){
+            p.setY(y);
+        }else if (y<0){
+            p.setY(0);
+        } else{
+            p.setY(299);
+        }   
     }
 
     public void handleMouseRelease(MouseEvent event) {
@@ -92,7 +119,7 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
     }
 
     public void afficher(Point pointDebut, Point pointFin, Character label) {
-
+        
         double x1 = pointDebut.getX(); 
         double y1 = pointDebut.getY(); 
         Circle pointControleDebut = new Circle(4, Color.RED);
@@ -132,11 +159,5 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
             rightPane.getChildren().remove(i); 
         }
         alphabetIndex[0]=0;  
-    }
-    public static Map<Character, Point>getPointsControleDebut() {
-    	return pointsControleDebut;
-    }
-    public static Map<Character, Point>getPointsControleFin() {
-    	return pointsControleFin;
     }
 }
