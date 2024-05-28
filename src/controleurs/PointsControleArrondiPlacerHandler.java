@@ -77,75 +77,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
         }
     }
 
-/*
-    public void handleLeftPaneClick(MouseEvent event) {
-        double x = event.getX();
-        double y = event.getY();
-
-        if ((0<=x && x<=300) && (0<=y && y<+300)){
-            Point pointDebut = new Point(x, y);
-            Point pointFin = new Point(x, y);
-    
-            char label = alphabet.charAt(alphabetIndex[0]);
-            alphabetIndex[0]++;
-    
-            pointsControleGauche.put(label, pointDebut);
-            pointsControleDroite.put(label, pointFin);
-
-            System.out.println("points de contrôle dans pointsControleGauche dans clic left pane : ");
-            for (Map.Entry<Character, Point> entry : pointsControleGauche.entrySet()) {
-                Character key = entry.getKey();
-                Point value = entry.getValue();
-                System.out.println("Key: " + key + ", Point: (" + value.getX() + ", " + value.getY() + ")");
-            }
-            
-            afficher(pointDebut, pointFin, label);
-            if (pointsControleGauche.size() % 2 == 0) {
-                ajouterPointsIntermediaires(label);
-            }
-            //check que le clic est pas déjà sur un point (sinon ça veut dire qu'on ajoute pas de point et que c'est juste un déplacement classique) 
-            /*Point pointProche = trouverPointProche(x, y, 4.0); // Rayon de 4 pixels pour la proximité
-            if (pointProche == null) {
-                // Si aucun point n'est trouvé à proximité => ajout 
-                Point pointDebut = new Point(x, y);
-                Point pointFin = new Point(x, y);
-        
-                char label = alphabet.charAt(alphabetIndex[0]);
-                alphabetIndex[0]++;
-        
-                pointsControleGauche.put(label, pointDebut);
-                pointsControleDroite.put(label, pointFin);
-
-                System.out.println("points de contrôle dans pointsControleGauche dans clic left pane : ");
-                for (Map.Entry<Character, Point> entry : pointsControleGauche.entrySet()) {
-                    Character key = entry.getKey();
-                    Point value = entry.getValue();
-                    System.out.println("Key: " + key + ", Point: (" + value.getX() + ", " + value.getY() + ")");
-                }
-                
-                afficher(pointDebut, pointFin, label);
-                if (pointsControleGauche.size() % 2 == 0) {
-                    ajouterPointsIntermediaires(label);
-                }
-            }   
-        }
-    }
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void afficher(Point pointDebut, Point pointFin, Character label) {
 
@@ -192,9 +123,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
         Point i2 = new Point((2 * p2.getX() + p3.getX()) / 3, (2 * p2.getY() + p3.getY()) / 3);
         Point i3 = new Point((p2.getX() + 2 * p3.getX()) / 3, (p2.getY() + 2 * p3.getY()) / 3);
 
-        /*System.out.println("coordonnées des nouveaux points (ie dans ajouterPointsIntermediaires): ");
-        System.out.println("P0 : "+p0.toString()+" P1 : "+p1.toString()+" i0 : "+i0.toString()+" i1 : "+i1.toString());*/
-
         char label1 = alphabet.charAt(alphabetIndex[0]);
         alphabetIndex[0]++;
         //ajout 1er point intermédiaire dans les maps et affichage 
@@ -223,13 +151,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
         pointsMorphingFin.put(label2, i3); 
         pointsMorphingFin.put((char)(label), p3);
 
-        //System.out.println(pointsMorphing);
-
-        /*System.out.println("tttt");
-        System.out.println(pointsIntermediairesGauche);
-        System.out.println(pointsIntermediairesDroite);
-        System.out.println("ttt");*/
-
         dessinerCourbe(pointsControleGauche, pointsIntermediairesGauche, leftPane);
         dessinerCourbe(pointsControleDroite, pointsIntermediairesDroite, rightPane);
     }
@@ -248,7 +169,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
         pane.getChildren().addAll(cerclePointIntermediaire, indiceText);
 
         PointsControleArrondiDeplacerHandler handler = new PointsControleArrondiDeplacerHandler(this, point,cerclePointIntermediaire, indiceText, pane, pointsIntermediaires, pointsControle);
-        //(MouseEvent event, Point p, Circle cerclePointControle, Text indiceText)
 
        cerclePointIntermediaire.setOnMousePressed(handler);
        cerclePointIntermediaire.setOnMouseDragged(handler);
@@ -258,8 +178,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
     }
 
     public void dessinerCourbe(Map<Character, Point> pointsControle, Map<Character, Point> pointsIntermediaires, StackPane pane) {
-        /*System.out.println("redraw");
-        System.out.println(pointsIntermediaires);*/
         //delete les courbes existantes
         pane.getChildren().removeIf(node -> node instanceof Line);
 
@@ -333,9 +251,6 @@ public class PointsControleArrondiPlacerHandler implements EventHandler<MouseEve
             }
         }
     }
-
-
-
 
     public void handleReset(ActionEvent event){
         pointsControleGauche.clear();
