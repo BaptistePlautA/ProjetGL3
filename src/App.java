@@ -13,13 +13,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import utilitaires.Point;
 
-import java.io.File;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 import controleurs.*; 
+import utilitaires.*;
 
 import java.util.HashMap;
 import java.util.Map; 
@@ -93,6 +92,9 @@ public class App extends Application {
 
         //add image view dans pane pour add pt controle 
         StackPane leftPane = new StackPane(); 
+        leftPane.setPrefSize(300, 300);
+        leftPane.setMaxSize(300, 300);
+        leftPane.setId("left-pane");
         leftPane.getChildren().add(imageGauche); 
         
         VBox leftVBox = new VBox(10, leftPane, boutonIMGGauche);
@@ -193,6 +195,7 @@ public class App extends Application {
 
         //add image view dans pane pour add pt controle 
         StackPane leftPane2 = new StackPane(); 
+        leftPane2.setPrefSize(300,300);
         leftPane2.getChildren().add(imageGauche2); 
         
         VBox leftVBox2 = new VBox(10, leftPane2, boutonIMGGauche2);
@@ -214,10 +217,10 @@ public class App extends Application {
         ///FIN RIGHT
         
         //instance de PointsControleHandler
-        PointsControleHandler handler2 = new PointsControleHandler(leftPane2, rightPane2);
+        PointsControleArrondiPlacerHandler handler2 = new PointsControleArrondiPlacerHandler(leftPane2, rightPane2);
 
         //associer les gestionnaires d'événements aux panneaux
-        leftPane2.setOnMouseClicked(event -> handler2.handleLeftPaneClick(event));
+        leftPane2.setOnMouseClicked(handler2);
 
         ///MID
         Button boutonReset2 = new Button("Réinitialiser");
@@ -237,7 +240,7 @@ public class App extends Application {
         Button boutonMorphing2 = new Button("Morphisme");
         Label loadingLabel = new Label("Chargement du morphing...");
         loadingLabel.setVisible(false);
-        boutonMorphing2.setOnAction(new MorphingArrondiHandler(champEtapes2, champDelai2));
+        boutonMorphing2.setOnAction(new MorphingArrondiHandler(champEtapes2, champDelai2, imageGauche2, handler2));
 
         VBox midBox2 = new VBox(10, loadingLabel, boutonMorphing2, boutonReset2,champEtapes2,etapesLabel2,champDelai2,delaiLabel2);
         midBox2.setAlignment(Pos.CENTER);
@@ -326,68 +329,8 @@ public class App extends Application {
         borderPane.setPadding(new javafx.geometry.Insets(20));
         return borderPane;
     }
-    
-    
-    //permet de supprimer un dossier
-    public static boolean supprimerDossier(File dossier) {
-        if (dossier.isDirectory()) {
-            // Récupérer la liste des fichiers et sous-dossiers du dossier
-            File[] fichiers = dossier.listFiles();
-            if (fichiers != null) {
-                for (File fichier : fichiers) {
-                    // Récursivement supprimer chaque fichier ou sous-dossier
-                    if (!supprimerDossier(fichier)) {
-                        return false; // Arrêter si la suppression échoue pour l'un des fichiers
-                    }
-                }
-            }
-        }
-        // Supprimer le dossier lui-même après avoir supprimé son contenu
-        return dossier.delete();
-    }
-    
 
     public static void main(String[] args) {
         launch(args);
     }
 }
-/* 
-import java.util.HashMap;
-import java.util.Map;
-
-import javafx.application.Application;
-import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
-import javafx.scene.Group; 
-import javafx.scene.Scene; 
-import javafx.scene.paint.Color; 
-import utilitaires.*;
-*//*
-public class App extends Application{
-    @Override 
-    public void start(Stage stage){
-        Map<Character, Point> pointsControle = new HashMap<>();
-        pointsControle.put('A', new Point(100, 100));
-        pointsControle.put('B', new Point(160, 60));
-        pointsControle.put('C', new Point(240, 240));
-        pointsControle.put('D', new Point(300, 100));
-        pointsControle.put('E', new Point(300, 100));
-        pointsControle.put('F', new Point(240, 340));
-        pointsControle.put('G', new Point(160, 140));
-        pointsControle.put('H', new Point(100, 100));
-        Group root = new Group();
-        // Générer et tracer la courbe de Bézier fermée
-        //traceBezierCurve(root, pointsControle);
-
-        // Ajouter des cercles pour visualiser les points de contrôle
-        for (Map.Entry<Character, Point> entry : pointsControle.entrySet()) {
-            Point point = entry.getValue();
-            Circle circle = new Circle(point.getX(), point.getY(), 3, Color.RED);
-            root.getChildren().add(circle);
-        }
-        Scene scene = new Scene(root, 400,200); 
-        stage.setScene(scene);
-        stage.setTitle("titre");
-        stage.show(); 
-    }
-}*/
