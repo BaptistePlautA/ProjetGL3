@@ -2,6 +2,7 @@ package controleurs;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import utilitaires.*;
 import javafx.event.ActionEvent;
@@ -10,14 +11,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
 public class MorphingArrondiHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
-    
-    public MorphingArrondiHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
-        super(champEtapes, champDelai, imageGauche, handler); 
+    private PointsControleArrondiPlacerHandler handler; 
+
+    public MorphingArrondiHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleArrondiPlacerHandler handler) {
+        super(champEtapes, champDelai, imageGauche); 
+        this.handler = handler; 
     }
 
     @Override
     public void handle(ActionEvent event) {
-        
+        long tempsDépart = System.currentTimeMillis();
         int nbEtapes = Integer.parseInt(getChampEtapes().getText());
         int delai = Integer.parseInt(getChampDelai().getText());
         
@@ -36,21 +39,17 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
             setImagePath(cheminImage.substring("file:\\".length()));
         }
 
-        //creer le tableau de pixel de l'image et unifie son fond et le stocke
-        ImageM imageFondModifie = modifFondImage(new ImageM(getImagePath()));
+        ImageM imageBase = new ImageM(getImagePath());
+        
+        //obtient le nombre de couleurs de l'image
+        List<int[]> listeCouleur = getNombreCouleur(imageBase);
+        System.out.println("nombre de couleur "+listeCouleur.size());
         
         //calculs et coloration de la forme de début 
-        Map<Character, Point> pointsCalculesImageDebut = traceCourbeBezier(PointsControleHandler.getPointsControleDebut());
-        colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut);
+        Map<Character, Point> pointsCalculesImageDebut = traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut());
+        colorFormeComplet(nbEtapes, imageBase, listeCouleur, pointsCalculesImageDebut);
 
-        //boucle tant qu'on a pas atteint le nombre d'etapes demande
-        while(nbEtapes>0) {
-        	calculEnsemblePointSuivant(nbEtapes);
-        	modifFondImage(imageFondModifie);
-            Map<Character, Point> pointsCalcules  = traceCourbeBezier(PointsControleHandler.getPointsControleDebut()); 
-        	colorPointsDeControle(imageFondModifie, pointsCalcules);
-        	nbEtapes-=1;
-        }
+       
 
         System.out.println("Morphing terminé !");
         try {
@@ -60,10 +59,25 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
         catch(Exception exceptionGIF){
             System.err.println("Erreur lors de la mise en GIF");
         }
-        getHandler().handleReset(event);
+        long tempsFin = System.currentTimeMillis();
+        
+        //calcul temps morphing en secondes 
+        double tempsMorphing = (tempsFin - tempsDépart) / 1000.0;
+        System.out.println("Temps de morphing : " + tempsMorphing + " s");
+        handler.handleReset(event);
     }
 
-    public Map<Character, Point> traceCourbeBezier(Map<Character, Point> controlPoints) {
+    @Override 
+    protected void calculEnsemblePointSuivant(int nbEtapes) {
+        for (Map.Entry<Character, Point> entry : PointsControleArrondiPlacerHandler.getPointsMorphingDebut().entrySet()) {
+            Character key = entry.getKey();
+            Point pointDebut = entry.getValue();
+            Point pointFin = PointsControleArrondiPlacerHandler.getPointsMorphingFin().get(key);
+            calculPointSuivant(pointDebut, pointFin, nbEtapes);
+        }
+    }
+
+    public static Map<Character, Point> traceCourbeBezier(Map<Character, Point> controlPoints) {
         Map<Character, Point> pointsCalcules = new HashMap<>(); 
         Character lettre = 'A';
 

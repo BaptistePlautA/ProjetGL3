@@ -10,9 +10,11 @@ import javafx.scene.control.TextField;
 import java.util.List;
 
 public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
+	private PointsControleHandler handler;
     
     public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
-        super(champEtapes, champDelai, imageGauche, handler); 
+        super(champEtapes, champDelai, imageGauche);
+        this.handler = handler;
     }
 
     @Override
@@ -40,11 +42,11 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         List<int[]> listeCouleur = getNombreCouleur(imageBase);
         
         //colore la forme en fonction du nombre de couleurs qu'elle contient
-        colorFormeComplet(nbEtapes, imageBase, listeCouleur);
+        colorFormeComplet(nbEtapes, imageBase, listeCouleur, null);
                
         //convertie les images en gif
         ConvertisseurGIF convertisseur = new ConvertisseurGIF();
         convertisseur.convertirEnGif(delai);
-        getHandler().handleReset(event);
+        handler.handleReset(event);
     }
 }

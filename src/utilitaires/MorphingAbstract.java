@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import controleurs.MorphingArrondiHandler;
+import controleurs.PointsControleArrondiPlacerHandler;
 import controleurs.PointsControleHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -15,13 +17,11 @@ public abstract class MorphingAbstract {
     private TextField champDelai;
     private ImageView imageGauche;
     private String imagePath;
-    private PointsControleHandler handler;
 
-    public MorphingAbstract(TextField champEtapes, TextField champDelai,ImageView imageGauche, PointsControleHandler handler) {
+    public MorphingAbstract(TextField champEtapes, TextField champDelai,ImageView imageGauche) {
         this.champEtapes = champEtapes;
         this.champDelai = champDelai;
         this.imageGauche= imageGauche;
-        this.handler = handler;
     }
 
     public TextField getChampEtapes(){
@@ -38,10 +38,6 @@ public abstract class MorphingAbstract {
 
     public String getImagePath(){
         return imagePath; 
-    }
-
-    public PointsControleHandler getHandler(){
-        return handler; 
     }
 
     public void setImagePath(String imagePath){
@@ -328,45 +324,73 @@ public abstract class MorphingAbstract {
     	return couleurs;
     }
     
-    public void colorFormeComplet(int nbEtapes, ImageM imageBase, List<int[]> couleurs) {
-    	
+    public void colorFormeComplet(int nbEtapes, ImageM imageBase, List<int[]> couleurs, Map<Character, Point> pointsCalculesImageDebut) {
     	
     	if(couleurs.size() < 3) {
         	int[] premierPixel = couleurs.get(0);
+        	
         	if (couleurs.size() < 2) {
                 ImageM imageFondModifie = modifFondImage(imageBase, null);
-                colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
-                
-              //boucle tant qu'on a pas atteint le nombre d'etapes demande
+                if(pointsCalculesImageDebut == null) {
+                	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
+                }else {
+                	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, null);
+                }
+                	
+                //boucle tant qu'on a pas atteint le nombre d'etapes demande
                 while(nbEtapes>0) {
                 	calculEnsemblePointSuivant(nbEtapes);
                 	modifFondImage(imageFondModifie, null);
-                	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
-                	nbEtapes-=1;
+                	if(pointsCalculesImageDebut == null) {
+                		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
+                	}else {
+	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+                    	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, null);
+                    }
+            		nbEtapes-=1;
                 }
         	}else {
         		if((premierPixel[0] == 0) && (premierPixel[1] == 0) && (premierPixel[2] == 0)){
                     ImageM imageFondModifie = modifFondImage(imageBase, null);
                     int[] secondPixel = couleurs.get(1);
-    	            colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
-    	            
+                    if(pointsCalculesImageDebut == null) {
+    	            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+                    }else {
+                    	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, secondPixel);
+                    }
+                    
     	            //boucle tant qu'on a pas atteint le nombre d'etapes demande
     	            while(nbEtapes>0) {
     	            	calculEnsemblePointSuivant(nbEtapes);
     	            	modifFondImage(imageFondModifie, null);
-    	            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            	
+    	            	if(pointsCalculesImageDebut == null) {
+    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            	}else {
+    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+                        	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, secondPixel);
+                        }
     	            	nbEtapes-=1;
     	            }
         		}else {
                     ImageM imageFondModifie = modifFondImage(imageBase, premierPixel);
                     int[] secondPixel = couleurs.get(1);
-    	            colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
-    	            
-    	          //boucle tant qu'on a pas atteint le nombre d'etapes demande
+                    if(pointsCalculesImageDebut == null) {
+                    	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+                    }
+                    else {
+                    	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, secondPixel);
+                    }
+    	            //boucle tant qu'on a pas atteint le nombre d'etapes demande
     	            while(nbEtapes>0) {
     	            	calculEnsemblePointSuivant(nbEtapes);
     	            	modifFondImage(imageFondModifie, premierPixel);
-    	            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            	if(pointsCalculesImageDebut == null) {
+    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            	}else {
+    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+                        	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, secondPixel);
+                        }
     	            	nbEtapes-=1;
     	            }
         		}
@@ -374,13 +398,22 @@ public abstract class MorphingAbstract {
         	}
         }else {
             ImageM imageFondModifie = modifFondImage(imageBase, null);
-            colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            if(pointsCalculesImageDebut == null) {
+            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            }else {
+            	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, null, null);
+            }
             
-          //boucle tant qu'on a pas atteint le nombre d'etapes demande
+            //boucle tant qu'on a pas atteint le nombre d'etapes demande
             while(nbEtapes>0) {
             	calculEnsemblePointSuivant(nbEtapes);
             	modifFondImage(imageFondModifie, null);
-            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            	if(pointsCalculesImageDebut == null) {
+            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            	}else {
+            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+                	colorPointsDeControle(imageFondModifie, pointsCalcules, null, null);
+                }
             	nbEtapes-=1;
             }
         }
