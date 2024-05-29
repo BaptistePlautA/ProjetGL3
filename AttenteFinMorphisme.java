@@ -1,3 +1,4 @@
+package controleurs;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,7 +28,7 @@ public class AttenteFinMorphisme {
 		StackPane pane = new StackPane();
 		Scene sccene = new Scene(pane);
 		
-		Image i = new Image("giphy2.gif");
+		Image i = new Image("ressources/giphy2.gif");
 		ImageView imv = new ImageView(i);
 		pane.getChildren().add(imv);
 		

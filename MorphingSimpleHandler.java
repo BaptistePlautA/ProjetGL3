@@ -1,84 +1,95 @@
-
 package controleurs;
 
-import javafx.scene.image.ImageView;
 import utilitaires.*;
-import java.io.File;
+
+import javafx.scene.image.ImageView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
+import java.io.File;
 
+import java.util.List;
 
+/**
+ * Classe MorphingSimpleHandler
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public class MorphingSimpleHandler extends MorphingAbstract implements EventHandler<ActionEvent> {
-    
-    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler handler) {
-        super(champEtapes, champDelai, imageGauche, handler); 
+    private PointsControleHandler controleur; 
+
+    public MorphingSimpleHandler(TextField champEtapes, TextField champDelai, ImageView imageGauche, PointsControleHandler controleur) {
+        super(champEtapes, champDelai, imageGauche); 
+        this.controleur = controleur; 
     }
 
     @Override
     public void handle(ActionEvent event) {
-
-       	
+    	
+    	
         Thread thread1 = new Thread(() -> {		//CrÈation de la fenÍtre
-               	
+           	
             Platform.runLater(() -> {	//gËre le Fx, Áa fonctionne pas sans Áa
             
-            	System.out.println(1);
+
             	AttenteFinMorphisme.creerFenetre();
             	
             });
      	
         });
         
-    
         
-        Thread thread2 = new Thread(() -> {		//Traitement du morphisme, se fait une fois que la fenÍtrer est crÈÈ
+        
+        Thread thread2 = new Thread(() -> {		//Traitement du morphisme, se fait une fois que la fenÍtre est crÈÈ
             try {
                 thread1.join();  //Attend que thread1 se termine
                 
+                
+                long tempsDepart = System.currentTimeMillis();
                 int nbEtapes = Integer.parseInt(getChampEtapes().getText());
                 int delai = Integer.parseInt(getChampDelai().getText());
                 
                 dossierFormeSimples();
                 
                 javafx.scene.image.Image image = getImageGauche().getImage();
-
-                //si image non nulle, rÈcupËre le chemin de l'image et le stocke (en enlevant le d√©but de la chaine 'file:\\'
+                
+                //si image non nulle, r√©cup√®re le chemin de l'image et le stocke (en enlevant le d√©but de la chaine 'file:\\'
+                
                 if (image != null) {
                     String imagePath = image.getUrl();
                     
                     File file = new File(imagePath);
                     String cheminImage = file.getPath();
                 
-                    cheminImage = cheminImage.replace("%20", " ").replace("\\", "\\\\");
+                    cheminImage = cheminImage.replace("%20", " ").replace("\\", "\\\\");	//A ENLEVER SI PB CHEMIN IMAGE
                     setImagePath(cheminImage.substring("file:\\".length()));
-                    System.out.println(getImagePath());
+             
 
                 }
-                
-                //creer le tableau de pixel de l'image et unifie son fond et le stocke
-                ImageM imageFondModifie = modifFondImage(new ImageM(getImagePath()));
 
-                //colore les points de contr√¥le de d√©but, trace les droites entre ceux-ci et colore
-                colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
+                ImageM imageBase = new ImageM(getImagePath()); 
+                List<int[]> listeCouleur = getNombreCouleur(imageBase); 
+                colorFormeComplet(nbEtapes, imageBase, listeCouleur, null); 
                 
-                //boucle tant qu'on a pas atteint le nombre d'etapes demande
-                while(nbEtapes>0) {
-                	calculEnsemblePointSuivant(nbEtapes);
-                	modifFondImage(imageFondModifie);
-                	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut());
-                	nbEtapes-=1;
-                }
+                //calcul temps morphing en secondes 
+                long tempsFin = System.currentTimeMillis();
+                double tempsMorphing = (tempsFin - tempsDepart) / 1000.0;
+                System.out.println("Temps de morphing : " + tempsMorphing + " s");
+  
+                
+                
+                
                 
                 //convertit les images en gif
                 Platform.runLater(() -> {			//gËre le Fx, Áa fonctionne pas sans Áa
                 	
-                	System.out.println(2);
                     ConvertisseurGIF convertisseur = new ConvertisseurGIF();
-                    convertisseur.convertirEnGif(delai);
-                    getHandler().handleReset(event);
+                    convertisseur.convertirEnGif(delai,  "./Formes");
+                    controleur.handleReset(event);
                  
                 });
                 
@@ -90,13 +101,14 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         
         
         
+        
         Thread thread3 = new Thread(() -> {		//Ferme la fenÍtre une fois que le traitement a ÈtÈ effectuÈ
             try {
             	
                 thread2.join();  	// Attend que thread2 termine    
                 
                 Platform.runLater(() -> {	//gËre le Fx, Áa fonctionne pas sans Áa
-                	System.out.println(3);
+    
                 	AttenteFinMorphisme.fermerFenetre();
                 });
  
@@ -110,7 +122,7 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
         thread1.start();
         thread2.start();
         thread3.start();
-          
-         
+        
+        
     }
 }
