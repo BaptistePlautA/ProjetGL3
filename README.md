@@ -53,12 +53,6 @@ Si besoin de recommencer la disposition des points, cliquer sur "réinitialiser"
 
 Déplacer les points de contrôles sur les sommets de la figure de droite ou sur les arêtes à défaut.
 
-#### Générer le morphing
-
-Choisir le nombre d'images de transition à générer et la vitesse de transitions entre les images du gif (en ms).
-
-Cliquer sur "morphing" pour générer le GIF.
-
 
 ### Formes arrondies
 
@@ -73,26 +67,16 @@ Il est aussi important de prévoir une décomposition de la courbe de la forme a
 
 Même principe que pour l'image gauche, il faut faire correspondre la ligne entre les 4 points avec les courbes potentielles de la forme arrondie de l'image droite.
 
-#### Générer le morphing
-
-Choisir le nombre d'images de transition à générer et la vitesse de transitions entre les images du gif (en ms).
-
-Cliquer sur "morphing" pour générer le GIF.
-
 
 ### Morphing d'images
 
 Possibilité de choisir l'image de départ et l'image d'arrivée en cliquant sur "Choisir l'image de gauche" et "Choisir l'image de droite". Le but ici est de générer un morphing entre deux images png ou jpg.
 
 #### Image de gauche
+mettre les points de contrôles sur des points caractéristiques de l'image comme les yeux, la bouche, ou sur un paysages des caractéristiques notables (un pic de montagne, un élément particulier, etc ...)
 
 #### Image de droite
-
-#### Générer le morphing
-
-Choisir le nombre d'images de transition à générer et la vitesse de transitions entre les images du gif (en ms).
-
-Cliquer sur "morphing" pour générer le GIF.
+déplacer les points générés sur les points cractéristiques de l'image gauche
 
 ***
 
