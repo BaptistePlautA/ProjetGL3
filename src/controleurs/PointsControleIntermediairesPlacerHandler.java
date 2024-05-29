@@ -107,7 +107,7 @@ public class PointsControleIntermediairesPlacerHandler implements EventHandler<M
 
         double x1 = pointGauche.getX(); 
         double y1 = pointGauche.getY(); 
-        Circle cerclepointGauche = new Circle(4, Color.RED);
+        Circle cerclepointGauche = new Circle(4, Color.web("#2c333e"));
         cerclepointGauche.setTranslateX(x1 - (leftPane.getWidth()/2)); 
         cerclepointGauche.setTranslateY(y1 - (leftPane.getHeight()/2));
 
@@ -120,7 +120,7 @@ public class PointsControleIntermediairesPlacerHandler implements EventHandler<M
 
         double x2 = pointDroite.getX(); 
         double y2 = pointDroite.getY();
-        Circle cerclepointDroite = new Circle(4, Color.RED);
+        Circle cerclepointDroite = new Circle(4, Color.web("#2c333e"));
         cerclepointDroite.setTranslateX(x2 - (rightPane.getWidth()/2)); 
         cerclepointDroite.setTranslateY(y2 - (rightPane.getHeight()/2));
 
@@ -199,7 +199,7 @@ public class PointsControleIntermediairesPlacerHandler implements EventHandler<M
         double x = point.getX();
         double y = point.getY();
 
-        Circle cerclePointIntermediaire = new Circle(4, Color.BLUE);
+        Circle cerclePointIntermediaire = new Circle(4, Color.web("#C3ACD0"));
         cerclePointIntermediaire.setTranslateX(x - (leftPane.getWidth() / 2));
         cerclePointIntermediaire.setTranslateY(y - (leftPane.getHeight() / 2));
 
