@@ -46,7 +46,7 @@ public class MorphingSimpleHandler extends MorphingAbstract implements EventHand
                
         //convertie les images en gif
         ConvertisseurGIF convertisseur = new ConvertisseurGIF();
-        convertisseur.convertirEnGif(delai);
+        convertisseur.convertirEnGif(delai, "./Formes");
         handler.handleReset(event);
     }
 }

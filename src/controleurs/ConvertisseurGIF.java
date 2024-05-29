@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class ConvertisseurGIF {
 
-    public void convertirEnGif(int delai) {
+    public void convertirEnGif(int delai, String folderPath) {
         // Chemin du dossier contenant les JPG du morphing
-        String folderPath = "././FormesSimples/";
+        //String folderPath = "././FormesSimples/";
 
         // Nom du GIF de sortie
         String outputGIF = "./resultatMorphing.gif";

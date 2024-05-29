@@ -98,7 +98,7 @@ public class App extends Application {
         leftVBox.setAlignment(Pos.CENTER);
         
         ///FIN LEFT
-
+        
         //RIGHT
         ImageView imageDroite = creerImageView();
         Button boutonIMGDroite = new Button("Choisir l'image de droite");
@@ -213,10 +213,10 @@ public class App extends Application {
         ///FIN RIGHT
         
         //instance de PointsControleHandler
-        PointsControleHandler handler2 = new PointsControleHandler(leftPane2, rightPane2);
+        PointsControleArrondiPlacerHandler handler2 = new PointsControleArrondiPlacerHandler(leftPane2, rightPane2);
 
         //associer les gestionnaires d'événements aux panneaux
-        leftPane2.setOnMouseClicked(event -> handler2.handleLeftPaneClick(event));
+        leftPane2.setOnMouseClicked(handler2);
 
         ///MID
         Button boutonReset2 = new Button("Réinitialiser");
@@ -265,7 +265,7 @@ public class App extends Application {
         
         ///Génération de la Scène
         sceneArrondie = new Scene(borderpaneMethodeArrondi, 1020, 700);
-        //sceneArrondie.getStylesheets().add("app.css");
+        sceneArrondie.getStylesheets().add("ImagesFX/app.css");
         ////////////////////////////////////FIN : Scene 2 : Morphisme d'images arrondies
 
         primaryStage.setTitle("Application de Morphing");

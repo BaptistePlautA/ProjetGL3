@@ -54,7 +54,7 @@ public class MorphingArrondiHandler extends MorphingAbstract implements EventHan
         System.out.println("Morphing terminé !");
         try {
             ConvertisseurGIF converter = new ConvertisseurGIF();
-            converter.convertirEnGif(delai);
+            converter.convertirEnGif(delai, "./Formes");
         }
         catch(Exception exceptionGIF){
             System.err.println("Erreur lors de la mise en GIF");

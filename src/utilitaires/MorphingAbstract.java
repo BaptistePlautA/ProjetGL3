@@ -76,7 +76,7 @@ public abstract class MorphingAbstract {
     }
 
     protected void dossierFormeSimples(){
-        File dossier = new File("./FormesSimples");
+        File dossier = new File("./Formes");
         // Vérifier si le dossier existe
         if (dossier.exists() && dossier.isDirectory()) {
             //suppression et création du dossier
@@ -88,6 +88,21 @@ public abstract class MorphingAbstract {
             //création du dossier
             dossier.mkdirs();
             System.out.println("Le dossier a été créé");
+        }
+        
+        String filePath = "resultatMorphing.gif";
+
+        File file = new File(filePath);
+
+        // Vérifiez si le fichier existe
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("Le fichier " + filePath + " a été supprimé avec succès.");
+            } else {
+                System.out.println("Échec de la suppression du fichier " + filePath + ".");
+            }
+        } else {
+            System.out.println("Le fichier " + filePath + " n'existe pas.");
         }
     }
     
@@ -178,7 +193,7 @@ public abstract class MorphingAbstract {
     	
     	remplirForme(imageMGauche, pixelFond, pixelForme);
     	
-        String outputPath = "./FormesSimples/image_+"+System.currentTimeMillis()+".jpg";
+        String outputPath = "./Formes/image_+"+System.currentTimeMillis()+".jpg";
         imageModifiee.saveImage(outputPath);
     }
 
