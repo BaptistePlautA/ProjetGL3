@@ -89,6 +89,8 @@ Exemple d'un morphing de formes arrondies entre un coeur et une croix :
 
 
 Exemple d'un morphing d'images entre deux tableaux de Van Gogh :
+
+![](https://github.com/BaptistePlautA/ProjetGL3/blob/Lukas/van_gogh.gif)
 ***
 
 ## Documentation
@@ -102,7 +104,7 @@ Exemple d'un morphing d'images entre deux tableaux de Van Gogh :
 
 [BufferedImage pour le morphing d'images](https://docs.oracle.com/javase/8/docs/api/java/awt/image/BufferedImage.html)
 
-[javaFX](https://docs.oracle.com/javase/8/javafx/api/toc.html)
+[JavaFX](https://docs.oracle.com/javase/8/javafx/api/toc.html)
 
 ***
 ## Technologies utilisées
