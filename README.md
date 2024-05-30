@@ -41,6 +41,7 @@ Installer les dépendances javafx.controls, fxml, graphics, swing.
 ### Choix des images 
 Pour chacun des types de morphisme, l'utilisateur peut choisir son image de début et de fin en cliquant respectivement sur "Choisir l'image de gauche" et "Choisir l'image de droite". 
 Attention, le nom de l'image ne doit pas comporter d'espaces et les extensions acceptées sont : png et jpg. 
+Pour tester l'application, si besoin, vous trouverez des images dans le dossier Annexes/ImagesPourTester/.
 
 ### Points de contrôle 
 - Pour le morphing simple : l'utilisateur peut ajouter des points sur l'image de gauche et les équivalents apparaissent sur l'image de droite. Sur cette dernière, l'utilisateur peut déplacer les points pour les positionner selon la forme de fin. Il est recommandé de positionner les points sur les sommets ou les arêtes des formes. 
