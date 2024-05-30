@@ -495,7 +495,7 @@ public abstract class MorphingAbstract {
         	int[] premierPixel = couleurs.get(0);
         	
         	if (couleurs.size() < 2) {
-                ImageM imageFondModifie = modifFondImage(imageBase, null);
+                ImageM imageFondModifie = modifFondImage(imageBase, premierPixel);
                 if(pointsCalculesImageDebut == null) {
                 	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, null);
                 }else {
@@ -505,7 +505,7 @@ public abstract class MorphingAbstract {
                 //boucle tant qu'on a pas atteint le nombre d'étapes demandées
                 while(nbEtapes>0) {
                 	calculEnsemblePointSuivant(nbEtapes);
-                	modifFondImage(imageFondModifie, null);
+                	modifFondImage(imageFondModifie, premierPixel);
                 	if(pointsCalculesImageDebut == null) {
                 		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, null);
                 	}else {
