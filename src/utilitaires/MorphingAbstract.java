@@ -1,22 +1,28 @@
 package utilitaires;
 
+import controleurs.*;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import controleurs.MorphingArrondiHandler;
-import controleurs.PointsControleArrondiPlacerHandler;
-import controleurs.PointsControleHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
+/**
+ * Classe MorphingAbstract
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public abstract class MorphingAbstract {
 
     private TextField champEtapes;
     private TextField champDelai;
     private ImageView imageGauche;
     private String imagePath;
+    private ImageView imageDroite;
 
     public MorphingAbstract(TextField champEtapes, TextField champDelai,ImageView imageGauche) {
         this.champEtapes = champEtapes;
@@ -24,16 +30,27 @@ public abstract class MorphingAbstract {
         this.imageGauche= imageGauche;
     }
 
+    public MorphingAbstract(TextField champEtapes, TextField champDelai,ImageView imageGauche,ImageView imageDroite) {
+        this.champEtapes = champEtapes;
+        this.champDelai = champDelai;
+        this.imageGauche= imageGauche;
+        this.imageDroite= imageDroite;
+    }
+
     public TextField getChampEtapes(){
         return champEtapes; 
     }
 
     public TextField getChampDelai(){
-        return champDelai;
+        return champDelai; 
     }
 
     public ImageView getImageGauche(){
         return imageGauche; 
+    }
+
+    public ImageView getImageDroite(){
+        return imageDroite; 
     }
 
     public String getImagePath(){
@@ -44,15 +61,25 @@ public abstract class MorphingAbstract {
         this.imagePath = imagePath; 
     }
     
+    /**
+     * Fonction qui permet d'appeler sur tous les points de contrôle la méthode de calcul pour les points suivants  
+     * @param nbEtapes
+     */
     protected void calculEnsemblePointSuivant(int nbEtapes) {
-        for (Map.Entry<Character, Point> entry : PointsControleHandler.getPointsControleDebut().entrySet()) {
+        for (Map.Entry<Character, Point> entry : PointsControleHandler.getPointsControleGauche().entrySet()) {
             Character key = entry.getKey();
             Point pointDebut = entry.getValue();
-            Point pointFin = PointsControleHandler.getPointsControleFin().get(key);
+            Point pointFin = PointsControleHandler.getPointsControleDroite().get(key);
             calculPointSuivant(pointDebut, pointFin, nbEtapes);
         }
     }
 
+    /**
+     * Fonction qui fait les calculs pour les points suivants 
+     * @param pointDebut 
+     * @param pointFin 
+     * @param nbEtapes
+     */
     protected void calculPointSuivant(Point pointDebut, Point pointFin, int nbEtapes) {
         double diffX = pointFin.getX()-pointDebut.getX();
         double diffY = pointFin.getY()-pointDebut.getY();
@@ -75,9 +102,12 @@ public abstract class MorphingAbstract {
         }
     }
 
+    /**
+     * Fonction qui supprime puis recrée le dossier qui contient les images étapes par étapes du morphing s'il existe déjà, sinon elle le crée   
+     */
     protected void dossierFormeSimples(){
         File dossier = new File("./Formes");
-        // Vérifier si le dossier existe
+        //vérifier si le dossier existe
         if (dossier.exists() && dossier.isDirectory()) {
             //suppression et création du dossier
             System.out.println("Le dossier existe.");
@@ -89,44 +119,38 @@ public abstract class MorphingAbstract {
             dossier.mkdirs();
             System.out.println("Le dossier a été créé");
         }
-        
-        String filePath = "resultatMorphing.gif";
-
-        File file = new File(filePath);
-
-        // Vérifiez si le fichier existe
-        if (file.exists()) {
-            if (file.delete()) {
-                System.out.println("Le fichier " + filePath + " a été supprimé avec succès.");
-            } else {
-                System.out.println("Échec de la suppression du fichier " + filePath + ".");
-            }
-        } else {
-            System.out.println("Le fichier " + filePath + " n'existe pas.");
-        }
     }
     
-    //permet de supprimer un dossier
+    /**
+     * Fonction qui supprime le dossier qui contient les images pour générer le gif  
+     * @param dossier  
+     * @return un boolean 
+     */
     protected boolean supprimerDossier(File dossier) {
         if (dossier.isDirectory()) {
-            // Récupérer la liste des fichiers et sous-dossiers du dossier
+            //récupérer la liste des fichiers et sous-dossiers du dossier
             File[] fichiers = dossier.listFiles();
             if (fichiers != null) {
                 for (File fichier : fichiers) {
-                    // Récursivement supprimer chaque fichier ou sous-dossier
+                    //récursivement supprimer chaque fichier ou sous-dossier
                     if (!supprimerDossier(fichier)) {
-                        return false; // Arrêter si la suppression échoue pour l'un des fichiers
+                        return false; //arrêter si la suppression échoue pour l'un des fichiers
                     }
                 }
             }
         }
-        // Supprimer le dossier lui-même après avoir supprimé son contenu
+        //supprimer le dossier lui-même après avoir supprimé son contenu
         return dossier.delete();
     }
 
+    /**
+     * Fonction qui modifie le fond de l'image  
+     * @param imageMGauche  
+     * @param pixelFond
+     * @return une imageM avec le fond modifié 
+     */
     public ImageM modifFondImage(ImageM imageMGauche, int[] pixelFond) {
         Pixel[][] tab = imageMGauche.getTab();
-        
         int[] pixelGlobal = {255, 255, 255};
         
         if(pixelFond != null) {
@@ -135,7 +159,6 @@ public abstract class MorphingAbstract {
         
         for (int y = 0; y < imageMGauche.getLargeur(); y++) {
             for (int x = 0; x < imageMGauche.getHauteur(); x++) {
-                
             	tab[x][y].setR(pixelGlobal[0]);
             	tab[x][y].setV(pixelGlobal[1]);
             	tab[x][y].setB(pixelGlobal[2]);
@@ -144,6 +167,13 @@ public abstract class MorphingAbstract {
         return imageMGauche;
     }
 
+    /**
+     * Fonction qui s'occupe d'appeler la méthode pour tracer les lignes entre chaque points de contrôles 
+     * @param imageMGauche  
+     * @param pointsCalcules
+     * @param premierPixel 
+     * @param secondPixel 
+     */
     public void colorPointsDeControle(ImageM imageMGauche, Map<Character, Point> pointsCalcules, int[] premierPixel, int[] secondPixel) {
     	Pixel[][] tab = imageMGauche.getTab();
     	ImageM imageModifiee = new ImageM(tab);
@@ -151,9 +181,10 @@ public abstract class MorphingAbstract {
     	Point pointDepart = null;
     	int tailleMap = pointsCalcules.size();
     	int pointEnCours = 1;
-    	
-    	int[] pixelFond = {255, 255, 255};
-    	int[] pixelForme = {0, 255, 0};
+
+        int[] pixelFond = {255, 255, 255};
+    	int[] pixelForme = {44, 51, 62};//couleur par défaut pour tracer  
+        //int[] pixelForme = {0,255,0}; 
     	if(premierPixel != null){
     		pixelFond = premierPixel;
     	}
@@ -161,43 +192,51 @@ public abstract class MorphingAbstract {
 			pixelForme = secondPixel;
 		}
     	
-    	//boucle sur les valeurs d'entree de la map 'pointsControleDebut' pour colorer chaque point en noir
+    	//boucle sur les valeurs d'entree de la map 'pointsCalcules' pour colorer chaque point en noir
     	for (Map.Entry<Character, Point> entry : pointsCalcules.entrySet()) {
         	Character key = entry.getKey();
             Point pointDebut = entry.getValue();
             
             //colore le point de contrôle en noir
+            /*tab[(int) Math.round(pointDebut.getX())][(int) Math.round(pointDebut.getY())].setR(0);
+            tab[(int) Math.round(pointDebut.getX())][(int) Math.round(pointDebut.getY())].setV(0);
+            tab[(int) Math.round(pointDebut.getX())][(int) Math.round(pointDebut.getY())].setB(0);*/
+
             tab[(int) pointDebut.getX()][(int) pointDebut.getY()].setR(0);
             tab[(int) pointDebut.getX()][(int) pointDebut.getY()].setV(0);
             tab[(int) pointDebut.getX()][(int) pointDebut.getY()].setB(0);
-            
+
+
             //stocke le premier point de la map
             if(key == 'A') {
             	pointDepart = pointDebut;
             }
             
-            //tant qu'on atteint pas la fin de la map, je lie le point a son suivant (tracage de la ligne entre n et n+1)
+            //tant qu'on atteint pas la fin de la map, on lie le point à son suivant (traçage de la ligne entre n et n+1)
             if(pointEnCours < tailleMap) {
             	Character cleSuivante = (char) (key + 1);
                 Point pointSuivant = pointsCalcules.get(cleSuivante);
-                
-                drawLine(imageMGauche, pointDebut, pointSuivant);
+                tracerLigne(imageMGauche, pointDebut, pointSuivant);
             }
             //atteinte de la fin de la map, lie le dernier point au premier (pour fermer la forme)
             else {
-            	drawLine(imageMGauche, pointDebut, pointDepart);
+            	tracerLigne(imageMGauche, pointDebut, pointDepart);
             }
-            
             pointEnCours += 1;
         }
+        remplirForme(imageMGauche, pixelFond, pixelForme);
     	
-    	remplirForme(imageMGauche, pixelFond, pixelForme);
-    	
-        String outputPath = "./Formes/image_+"+System.currentTimeMillis()+".jpg";
-        imageModifiee.saveImage(outputPath);
+        String outputPath = "./Formes/image_"+System.currentTimeMillis()+".jpg";
+        imageModifiee.sauvegarderImage(outputPath);
     }
 
-    public void drawLine(ImageM image, Point depart, Point arrivee) {
+    /**
+     * Fonction qui trace une ligne entre un point de départ et un d'arrivée 
+     * @param image  
+     * @param depart
+     * @param arrivee
+     */
+    public void tracerLigne(ImageM image, Point depart, Point arrivee) {
     	Pixel[][] tab = image.getTab();
     	//algorithme de Bresenham
     	int x0 = (int) depart.getX();
@@ -228,8 +267,14 @@ public abstract class MorphingAbstract {
         }
     }
 
+
+    /**
+     * Fonction qui rempli la forme tracée 
+     * @param image  
+     * @param pixelFond
+     * @param pixelForme
+     */
     public void remplirForme(ImageM image, int[] pixelFond, int[] pixelForme) {
-    	
         Pixel[][] tab = image.getTab();
         boolean fondNoir = false;
         
@@ -240,10 +285,11 @@ public abstract class MorphingAbstract {
         	pixelFond[2] = 255;
         }
         
-    	//boucle pour colorer en vert tous les pixels se situants a droite d'un pixel noir, et de colorer en blanc tous les pixels verts situes sous un pixel blanc
+    	//boucle pour colorier tous les pixels se situant à droite d'un pixel noir, et de colorier en blanc tous les pixels de la couleur par défaut (ou couleur de l'image) situés sous un pixel blanc
+        //on colorie les pixels soit avec la couleur par défaut, soit si l'image contient seulement 2 couleurs, une de fond et une dans la forme, alors on colorie le pixel avec la couleur de la forme (sur l'image)
     	for (int y = 0; y < image.getHauteur()-1; y++) {
             for (int x = 0; x < image.getLargeur()-1; x++) {
-            	//si pixel est noir et case a droite est blanche, colore la case de droite en vert
+            	//si le pixel est noir et la case à droite est blanche, colorie la case de droite
             	if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0) && (x<image.getLargeur()-1))  {
                 	if ((tab[x+1][y].getR() == pixelFond[0]) && (tab[x+1][y].getV() == pixelFond[1]) && (tab[x+1][y].getB() == pixelFond[2])) {
                 		tab[x+1][y].setR(pixelForme[0]);
@@ -251,7 +297,7 @@ public abstract class MorphingAbstract {
                 		tab[x+1][y].setB(pixelForme[2]);
                     }
                 }
-                //si pixel est vert et pixel du dessus est blanc, colore la case en blanc
+                //si le pixel est colorié et le pixel du dessus est blanc, colorie la case en blanc
             	if ((tab[x][y].getR() == pixelForme[0]) && (tab[x][y].getV() == pixelForme[1]) && (tab[x][y].getB() == pixelForme[2]) && (y>0)) {
                 	if ((tab[x][y-1].getR() == pixelFond[0]) && (tab[x][y-1].getV() == pixelFond[1]) && (tab[x][y-1].getB() == pixelFond[2])) {
                 		tab[x][y].setR(pixelFond[0]);
@@ -259,7 +305,7 @@ public abstract class MorphingAbstract {
                 		tab[x][y].setB(pixelFond[2]);
                     }
                 }
-                //si pixel vert et pixel de droite est blanc, colore la case de droite en vert
+                //si le pixel est colorié et le pixel de droite est blanc, colorie la case de droite
                 if ((tab[x][y].getR() == pixelForme[0]) && (tab[x][y].getV() == pixelForme[1]) && (tab[x][y].getB() == pixelForme[2]) && (x<image.getLargeur()-1)) {
                 	if ((tab[x+1][y].getR() == pixelFond[0]) && (tab[x+1][y].getV() == pixelFond[1]) && (tab[x+1][y].getB() == pixelFond[2])) {
                 		tab[x+1][y].setR(pixelForme[0]);
@@ -270,10 +316,10 @@ public abstract class MorphingAbstract {
             }
         }
     	
-    	//boucle pour colorer en blanc tous les pixels verts situes au dessus/a gauche d'une case dont le pixel est blanc
+    	//boucle pour colorier en blanc tous les pixels coloriés situés au dessus/à gauche d'une case dont le pixel est blanc
     	for (int y = image.getHauteur() - 1; y >= 0; y--) {
     	    for (int x = image.getLargeur() - 1; x >= 0; x--) {
-    	    	//si pixel est vert et pixel de droite/dessous est blanc, colore la case en blanc
+    	    	//si le pixel est colorié et le pixel de droite/dessous est blanc, colorie la case en blanc
     	    	if ((tab[x][y].getR() == pixelForme[0]) && (tab[x][y].getV() == pixelForme[1]) && (tab[x][y].getB() == pixelForme[2])) {
     	            if (x + 1 < image.getLargeur() && (tab[x + 1][y].getR() == pixelFond[0]) && (tab[x + 1][y].getV() == pixelFond[1]) && (tab[x + 1][y].getB() == pixelFond[2])) {
     	                tab[x][y].setR(pixelFond[0]);
@@ -286,7 +332,7 @@ public abstract class MorphingAbstract {
     	                tab[x][y].setB(pixelFond[2]);
     	            }
     	        }
-    	        //si pixel est noir, le colore en vert
+    	        //si le pixel est noir, le colorie (couleur défaut ou couleur forme)
     	        if ((tab[x][y].getR() == 0) && (tab[x][y].getV() == 0) && (tab[x][y].getB() == 0)) {
 	                tab[x][y].setR(pixelForme[0]);
 	                tab[x][y].setV(pixelForme[1]);
@@ -310,15 +356,20 @@ public abstract class MorphingAbstract {
 	        }
     	}
 	}
-    
+
+    /**
+     * Fonction qui récupère le nombre de couleur sur l'image  
+     * @param imageBase  
+     * @return List<int[]> 
+     */
     public List<int[]> getNombreCouleur(ImageM imageBase) {
     	
     	Pixel[][] tabBase = imageBase.getTab();
     	List<int[]> couleurs = new ArrayList<>();
     	
-    	for (int y = 0; y < imageBase.getHauteur(); y++) {  // Parcourir la hauteur
-            for (int x = 0; x < imageBase.getLargeur(); x++) {  // Parcourir la largeur
-                Pixel pixel = tabBase[y][x];  // Accéder correctement aux indices
+    	for (int y = 0; y < imageBase.getHauteur(); y++) {  //parcourir la hauteur
+            for (int x = 0; x < imageBase.getLargeur(); x++) {  //parcourir la largeur
+                Pixel pixel = tabBase[y][x];  //accéder correctement aux indices
                 int r = pixel.getR();
                 int v = pixel.getV();
                 int b = pixel.getB();
@@ -338,28 +389,35 @@ public abstract class MorphingAbstract {
         }
     	return couleurs;
     }
-    
+
+    /**
+     * Fonction qui colorie la forme 
+     * @param nbEtapes 
+     * @param imageBase
+     * @param couleurs 
+     * @param pointsCalculesImageDebut 
+     */
     public void colorFormeComplet(int nbEtapes, ImageM imageBase, List<int[]> couleurs, Map<Character, Point> pointsCalculesImageDebut) {
     	
     	if(couleurs.size() < 3) {
         	int[] premierPixel = couleurs.get(0);
         	
         	if (couleurs.size() < 2) {
-                ImageM imageFondModifie = modifFondImage(imageBase, null);
+                ImageM imageFondModifie = modifFondImage(imageBase, premierPixel);
                 if(pointsCalculesImageDebut == null) {
-                	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
+                	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, null);
                 }else {
                 	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, null);
                 }
                 	
-                //boucle tant qu'on a pas atteint le nombre d'etapes demande
+                //boucle tant qu'on a pas atteint le nombre d'étapes demandées
                 while(nbEtapes>0) {
                 	calculEnsemblePointSuivant(nbEtapes);
-                	modifFondImage(imageFondModifie, null);
+                	modifFondImage(imageFondModifie, premierPixel);
                 	if(pointsCalculesImageDebut == null) {
-                		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, null);
+                		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, null);
                 	}else {
-	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleIntermediairesPlacerHandler.getPointsMorphingDebut()); 
                     	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, null);
                     }
             		nbEtapes-=1;
@@ -369,20 +427,20 @@ public abstract class MorphingAbstract {
                     ImageM imageFondModifie = modifFondImage(imageBase, null);
                     int[] secondPixel = couleurs.get(1);
                     if(pointsCalculesImageDebut == null) {
-    	            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, secondPixel);
                     }else {
                     	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, secondPixel);
                     }
                     
-    	            //boucle tant qu'on a pas atteint le nombre d'etapes demande
+    	            //boucle tant qu'on a pas atteint le nombre d'étapes demandées
     	            while(nbEtapes>0) {
     	            	calculEnsemblePointSuivant(nbEtapes);
     	            	modifFondImage(imageFondModifie, null);
     	            	
     	            	if(pointsCalculesImageDebut == null) {
-    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, secondPixel);
     	            	}else {
-    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleIntermediairesPlacerHandler.getPointsMorphingDebut()); 
                         	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, secondPixel);
                         }
     	            	nbEtapes-=1;
@@ -391,42 +449,41 @@ public abstract class MorphingAbstract {
                     ImageM imageFondModifie = modifFondImage(imageBase, premierPixel);
                     int[] secondPixel = couleurs.get(1);
                     if(pointsCalculesImageDebut == null) {
-                    	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+                    	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, secondPixel);
                     }
                     else {
                     	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, premierPixel, secondPixel);
                     }
-    	            //boucle tant qu'on a pas atteint le nombre d'etapes demande
+    	            //boucle tant qu'on a pas atteint le nombre d'étapes demandées
     	            while(nbEtapes>0) {
     	            	calculEnsemblePointSuivant(nbEtapes);
     	            	modifFondImage(imageFondModifie, premierPixel);
     	            	if(pointsCalculesImageDebut == null) {
-    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), premierPixel, secondPixel);
+    	            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), premierPixel, secondPixel);
     	            	}else {
-    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+    	            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleIntermediairesPlacerHandler.getPointsMorphingDebut()); 
                         	colorPointsDeControle(imageFondModifie, pointsCalcules, premierPixel, secondPixel);
                         }
     	            	nbEtapes-=1;
     	            }
         		}
-	        	
         	}
         }else {
             ImageM imageFondModifie = modifFondImage(imageBase, null);
             if(pointsCalculesImageDebut == null) {
-            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            	colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), null, null);
             }else {
             	colorPointsDeControle(imageFondModifie, pointsCalculesImageDebut, null, null);
             }
             
-            //boucle tant qu'on a pas atteint le nombre d'etapes demande
+            //boucle tant qu'on a pas atteint le nombre d'étapes demandées
             while(nbEtapes>0) {
             	calculEnsemblePointSuivant(nbEtapes);
             	modifFondImage(imageFondModifie, null);
             	if(pointsCalculesImageDebut == null) {
-            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleDebut(), null, null);
+            		colorPointsDeControle(imageFondModifie, PointsControleHandler.getPointsControleGauche(), null, null);
             	}else {
-            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleArrondiPlacerHandler.getPointsMorphingDebut()); 
+            		Map<Character, Point> pointsCalcules = MorphingArrondiHandler.traceCourbeBezier(PointsControleIntermediairesPlacerHandler.getPointsMorphingDebut()); 
                 	colorPointsDeControle(imageFondModifie, pointsCalcules, null, null);
                 }
             	nbEtapes-=1;

@@ -5,11 +5,21 @@ import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.image.Image;
-import java.io.File;
 import javafx.embed.swing.SwingFXUtils;
-import javax.imageio.ImageIO;
+
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+
+/**
+ * Classe ChoixIMGHandler
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public class ChoixIMGHandler implements EventHandler<ActionEvent> {
     private ImageView imageView;
 
@@ -19,20 +29,25 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            Image image = new Image(selectedFile.toURI().toString());
-            Image scaledImage = scaleImage(image, 300, 300);
-            saveImageToFile(scaledImage, "./bin/", "scaled_" + selectedFile.getName());
-            imageView.setImage(new Image("scaled_"+selectedFile.getName()));
+        FileChooser selecteurFichier = new FileChooser();
+        selecteurFichier.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"));
+        File fichierSelectionne = selecteurFichier.showOpenDialog(null);
+        if (fichierSelectionne != null) {
+            Image image = new Image(fichierSelectionne.toURI().toString());
+            Image imageRedimensionnee = redimensionnerImage(image, 300, 300);
+            sauvegarderImageEnFichier(imageRedimensionnee, "./bin/", "scaled_" + fichierSelectionne.getName());
+            imageView.setImage(new Image("scaled_"+fichierSelectionne.getName()));
         }
     }
-    
-    //Scale automatiquement l'image
-    private Image scaleImage(Image image, double largeur, double hauteur) {
+ 
+    /**
+     * Fonction pour scale automatiquement l'image 
+     * @param image
+     * @param largeur
+     * @param hauteur
+     * @return retourne l'image 
+     */
+    public Image redimensionnerImage(Image image, double largeur, double hauteur) {
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(false);
         imageView.setFitWidth(largeur);
@@ -40,11 +55,16 @@ public class ChoixIMGHandler implements EventHandler<ActionEvent> {
         return imageView.snapshot(null, null);
     }
 
-    //enregistre l'image en fichier danas le bin
-    private void saveImageToFile(Image image, String directoryPath, String fileName) {
-        File outputFile = new File(directoryPath, fileName);
+    /**
+     * Fonction qui enregistre l'image en fichier dans le bin
+     * @param image
+     * @param cheminDossier
+     * @param nomFichier
+     */
+    private void sauvegarderImageEnFichier(Image image, String cheminDossier, String nomFichier) {
+        File fichierSortie = new File(cheminDossier, nomFichier);
         try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outputFile);
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", fichierSortie);
         } catch (IOException e) {
             e.printStackTrace();
         }

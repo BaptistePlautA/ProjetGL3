@@ -1,5 +1,7 @@
 package controleurs;
 
+import utilitaires.Point;
+
 import java.util.Map;
 
 import javafx.event.EventHandler;
@@ -7,24 +9,31 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import utilitaires.Point;
 
-public class PointsControleArrondiDeplacerHandler implements EventHandler<MouseEvent> {
+
+/**
+ * Classe PointsControleIntermediairesDeplacerHandler
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
+public class PointsControleIntermediairesDeplacerHandler implements EventHandler<MouseEvent> {
 
     private Point pointEnCoursDeDeplacement;
 
-    private PointsControleArrondiPlacerHandler controleur;
+    private PointsControleIntermediairesPlacerHandler controleur;
     private Point point;
-    private Circle pointIntermediaire;
+    private Circle cerclePointIntermediaire;
     private Text indiceText;
     private StackPane pane;
     private Map<Character, Point> pointsIntermediaires;
     private Map<Character, Point> pointsControle;
 
-    public PointsControleArrondiDeplacerHandler(PointsControleArrondiPlacerHandler controleur, Point point, Circle pointIntermediaire, Text indiceText, StackPane pane, Map<Character, Point> pointsIntermediaires, Map<Character, Point> pointsControle) {
+    public PointsControleIntermediairesDeplacerHandler(PointsControleIntermediairesPlacerHandler controleur, Point point, Circle cerclePointIntermediaire, Text indiceText, StackPane pane, Map<Character, Point> pointsIntermediaires, Map<Character, Point> pointsControle) {
         this.controleur = controleur;
         this.point = point;
-        this.pointIntermediaire = pointIntermediaire;
+        this.cerclePointIntermediaire = cerclePointIntermediaire;
         this.indiceText = indiceText;
         this.pane = pane;
         this.pointsIntermediaires = pointsIntermediaires;
@@ -40,7 +49,8 @@ public class PointsControleArrondiDeplacerHandler implements EventHandler<MouseE
             pointEnCoursDeDeplacement = new Point(mouseX, mouseY); 
             controleur.setIsDragging(false);
         }
-      
+    
+        //pour déplacement d'un point intermédiaire 
         if (event.getEventType()==MouseEvent.MOUSE_DRAGGED) {
             double mouseX = event.getSceneX();
             double mouseY = event.getSceneY();
@@ -48,26 +58,26 @@ public class PointsControleArrondiDeplacerHandler implements EventHandler<MouseE
             double deltaX = mouseX - pointEnCoursDeDeplacement.getX(); 
             double deltaY = mouseY - pointEnCoursDeDeplacement.getY(); 
     
-            double coordonnéeX = pointIntermediaire.getTranslateX() + deltaX; 
-            double coordonnéeY = pointIntermediaire.getTranslateY() + deltaY; 
+            double coordonnéeX = cerclePointIntermediaire.getTranslateX() + deltaX; 
+            double coordonnéeY = cerclePointIntermediaire.getTranslateY() + deltaY; 
     
             //check cercle x pas en dehors du pane 
             if (coordonnéeX < 0 - pane.getWidth()/2){
-                pointIntermediaire.setTranslateX(0 - pane.getWidth()/2); 
+                cerclePointIntermediaire.setTranslateX(0 - pane.getWidth()/2); 
             }else if (coordonnéeX > 0 + pane.getWidth()/2){
-                pointIntermediaire.setTranslateX(0 + pane.getWidth()/2);
+                cerclePointIntermediaire.setTranslateX(0 + pane.getWidth()/2);
                 
             }else{
-                pointIntermediaire.setTranslateX(coordonnéeX);
+                cerclePointIntermediaire.setTranslateX(coordonnéeX);
                 indiceText.setTranslateX(indiceText.getTranslateX() + deltaX);
             }
             //check cercle y pas en dehors du pane
             if (coordonnéeY < 0 - pane.getHeight()/2){
-                pointIntermediaire.setTranslateY(0 - pane.getHeight()/2); 
+                cerclePointIntermediaire.setTranslateY(0 - pane.getHeight()/2); 
             }else if (coordonnéeY > 0 + pane.getHeight()/2){
-                pointIntermediaire.setTranslateY(0 + pane.getHeight()/2);
+                cerclePointIntermediaire.setTranslateY(0 + pane.getHeight()/2);
             }else{
-                pointIntermediaire.setTranslateY(coordonnéeY);
+                cerclePointIntermediaire.setTranslateY(coordonnéeY);
                 indiceText.setTranslateY(indiceText.getTranslateY() + deltaY);
             }
     

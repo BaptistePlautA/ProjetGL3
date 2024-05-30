@@ -1,0 +1,68 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');*/
+
+.root {
+    -fx-background-color : white;  
+}
+
+/*css pour les boutons de l'accueil (1ère page)*/
+.Bouton {
+    -fx-font-family: "Roboto Condensed", sans-serif;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px; 
+    -fx-background-color: #2c333e;
+    -fx-text-fill: white;
+    -fx-border-radius: 15px;
+    -fx-background-radius : 15px; 
+    -fx-border-width : 2px; 
+    -fx-border-color : #2c333e; 
+    -fx-cursor: hand;
+}
+
+.Bouton:hover {
+    -fx-background-color: #464f5e;
+    -fx-border-color : #464f5e;
+}
+
+.MenuBouton{
+    -fx-pref-width: 250px; 
+    -fx-pref-height: 30px;
+}
+
+/*boutons retour et help*/ 
+.Bouton2{
+    -fx-background-color: #f6f7f9; 
+    -fx-text-fill : #464f5e; 
+    -fx-border-width : 1px; 
+    -fx-border-color : #909194; 
+}
+.Bouton2:hover{
+    -fx-background-color: #f6f7f9; 
+    -fx-text-fill : #464f5e; 
+    -fx-border-width : 1px; 
+    -fx-border-color : #909194; 
+}
+
+/*css pour les label et les fields de img/sec et délai*/
+.Mid_Label{
+    -fx-font-family: "Roboto Condensed", sans-serif;
+    -fx-text-fill: #909194; 
+}
+
+.Mid_TextField{
+    -fx-max-width: 110px; 
+    -fx-pref-height: 30px; 
+    -fx-border-radius: 10px;
+    -fx-background-radius : 10px; 
+    -fx-border-width : 1px; 
+    -fx-border-color : #909194; 
+    -fx-text-fill: #909194;
+    -fx-background-color : #f6f7f9;
+
+    
+}
+
+/*css pour les pane*/ 
+.Pane{
+    -fx-border-width : 1px; 
+    -fx-border-color : #909194; 
+}

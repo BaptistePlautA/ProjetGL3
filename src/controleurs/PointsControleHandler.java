@@ -1,4 +1,7 @@
 package controleurs;
+
+import utilitaires.Point;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,44 +12,75 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import utilitaires.Point; 
-
+ 
+/**
+ * Classe PointsControleHandler
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public class PointsControleHandler implements EventHandler<ActionEvent> {
     private StackPane leftPane; 
     private StackPane rightPane;
 
     private Point pointEnCoursDeDeplacement;
+    private PointsControleIntermediairesPlacerHandler controleur;
 
-    private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private int indexPoint = 3; 
+
+    private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private int[] alphabetIndex = {0};
 
-    private static Map<Character, Point> pointsControleDebut = new HashMap<>();
-    private static Map<Character, Point> pointsControleFin = new HashMap<>();
+    private static Map<Character, Point> pointsControleGauche = new HashMap<>();
+    private static Map<Character, Point> pointsControleDroite = new HashMap<>();
 
-    public PointsControleHandler (StackPane leftPane, StackPane rightPane){
+    public PointsControleHandler (StackPane leftPane, StackPane rightPane, PointsControleIntermediairesPlacerHandler controleur){
         this.leftPane = leftPane; 
-        this.rightPane = rightPane;
+        this.rightPane = rightPane; 
+        this.controleur = controleur; 
+    }
+
+    public int getIndexPoint() {
+		return indexPoint;
+	}
+
+	public void setIndexPoint(int indexPoint) {
+		this.indexPoint = indexPoint;
+	}
+
+    public static Map<Character, Point>getPointsControleGauche() {
+    	return pointsControleGauche;
+    }
+    public static Map<Character, Point>getPointsControleDroite() {
+    	return pointsControleDroite;
     }
 
     @Override
     public void handle(ActionEvent arg0) {}
 
+    /**
+     * Procédure pour ajouter un point sur l'image de gauche 
+     * @param event
+     */
     public void handleLeftPaneClick(MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
+        setIndexPoint(getIndexPoint() + 1);
 
         if ((0<=x && x<=300) && (0<=y && y<+300)){
-            Point pointDebut = new Point(x, y);
-            Point pointFin = new Point(x, y);
+            Point pointGauche = new Point(x, y,getIndexPoint());
+            Point pointDroite = new Point(x, y,getIndexPoint());
     
             char label = alphabet.charAt(alphabetIndex[0]);
             alphabetIndex[0]++;
     
-            pointsControleDebut.put(label, pointDebut);
-            pointsControleFin.put(label, pointFin);
+            pointsControleGauche.put(label, pointGauche);
+            pointsControleDroite.put(label, pointDroite);
             
-            afficher(pointDebut, pointFin, label);
+            afficher(pointGauche, pointDroite, label);
         }
+        
     }
 
     public void handlePanePress(MouseEvent event, Point p) {
@@ -55,6 +89,13 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
         pointEnCoursDeDeplacement = new Point(mouseX, mouseY); 
     }
 
+    /**
+     * Procédure pour déplacer un point (avec son label et son cercle)
+     * @param event
+     * @param p
+     * @param cerclePointControle
+     * @param indiceText
+     */
     public void handlePaneDrag(MouseEvent event, Point p, Circle cerclePointControle, Text indiceText) {
         double mouseX = event.getX();
         double mouseY = event.getY();
@@ -62,32 +103,33 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
         double deltaX = mouseX - pointEnCoursDeDeplacement.getX(); 
         double deltaY = mouseY - pointEnCoursDeDeplacement.getY(); 
 
-        double coordonnéeX = cerclePointControle.getTranslateX() + deltaX; 
-        double coordonnéeY = cerclePointControle.getTranslateY() + deltaY; 
+        double coordonneeX = cerclePointControle.getTranslateX() + deltaX; 
+        double coordonneeY = cerclePointControle.getTranslateY() + deltaY; 
 
-        //check point x pas en dehors du pane 
-        if (coordonnéeX < 0 - rightPane.getWidth()/2){
+        //check cercle x pas en dehors du pane 
+        if (coordonneeX < 0 - rightPane.getWidth()/2){
             cerclePointControle.setTranslateX(0 - rightPane.getWidth()/2); 
-        }else if (coordonnéeX > 0 + rightPane.getWidth()/2){
+        }else if (coordonneeX > 0 + rightPane.getWidth()/2){
             cerclePointControle.setTranslateX(0 + rightPane.getWidth()/2);
             
         }else{
-            cerclePointControle.setTranslateX(coordonnéeX);
+            cerclePointControle.setTranslateX(coordonneeX);
             indiceText.setTranslateX(indiceText.getTranslateX() + deltaX);
         }
-        //check point y pas en dehors du pane
-        if (coordonnéeY < 0 - rightPane.getHeight()/2){
+        //check cercle y pas en dehors du pane
+        if (coordonneeY < 0 - rightPane.getHeight()/2){
             cerclePointControle.setTranslateY(0 - rightPane.getHeight()/2); 
-        }else if (coordonnéeY > 0 + rightPane.getHeight()/2){
+        }else if (coordonneeY > 0 + rightPane.getHeight()/2){
             cerclePointControle.setTranslateY(0 + rightPane.getHeight()/2);
         }else{
-            cerclePointControle.setTranslateY(coordonnéeY);
+            cerclePointControle.setTranslateY(coordonneeY);
             indiceText.setTranslateY(indiceText.getTranslateY() + deltaY);
         }
 
         double x = p.getX() + deltaX; 
         double y = p.getY() + deltaY;
 
+        //check point x pas en dehors du pane 
         if (x<299 && x>0){
             p.setX(x); 
         }else if (x<0){
@@ -96,12 +138,18 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
             p.setX(299);
         }
 
+        //check point y pas en dehors du pane 
         if (y<299 && y>0){
             p.setY(y);
         }else if (y<0){
             p.setY(0);
         } else{
             p.setY(299);
+        }   
+
+        //si on est dans le cas des formes arrondies, quand le point est déplacé, il faut retracer la droite entre les points de contrôle 
+        if (controleur != null){
+            controleur.dessinerCourbe(controleur.getPointsControleDroite(), controleur.getPointsIntermediairesDroite(), controleur.getRightPane());
         }
     }
 
@@ -109,52 +157,57 @@ public class PointsControleHandler implements EventHandler<ActionEvent> {
         pointEnCoursDeDeplacement = null;
     }
 
-    public void afficher(Point pointDebut, Point pointFin, Character label) {
-
-        double x1 = pointDebut.getX(); 
-        double y1 = pointDebut.getY(); 
-        Circle pointControleDebut = new Circle(4, Color.RED);
-        pointControleDebut.setTranslateX(x1 - (leftPane.getWidth()/2)); 
-        pointControleDebut.setTranslateY(y1 - (leftPane.getHeight()/2));
+    /**
+     * Procédure pour afficher les points (cercle et label)
+     * @param pointGauche
+     * @param pointDroite
+     * @param label
+     */
+    public void afficher(Point pointGauche, Point pointDroite, Character label) {
+        double x1 = pointGauche.getX(); 
+        double y1 = pointGauche.getY(); 
+        Circle pointControleGauche = new Circle(4, Color.web("#2c333e"));
+        pointControleGauche.setTranslateX(x1 - (leftPane.getWidth()/2)); 
+        pointControleGauche.setTranslateY(y1 - (leftPane.getHeight()/2));
 
         Text indiceText = new Text(String.valueOf(label));
         indiceText.setTranslateX(x1 - (leftPane.getWidth()/2) + 14);
         indiceText.setTranslateY(y1 - (leftPane.getHeight()/2) - 14);
-        leftPane.getChildren().addAll(pointControleDebut, indiceText);
+        leftPane.getChildren().addAll(pointControleGauche, indiceText);
 
-        PointsControleHandler handler = new PointsControleHandler(leftPane, rightPane);
+        PointsControleHandler controleur2 = new PointsControleHandler(leftPane, rightPane, controleur);
     
-        double x2 = pointFin.getX(); 
-        double y2 = pointFin.getY();
-        Circle pointControleFin = new Circle(4, Color.RED);
-        pointControleFin.setTranslateX(x2 - (rightPane.getWidth()/2)); 
-        pointControleFin.setTranslateY(y2 - (rightPane.getHeight()/2));
+        double x2 = pointDroite.getX(); 
+        double y2 = pointDroite.getY();
+        Circle pointControleDroite = new Circle(4, Color.web("#2c333e"));
+        pointControleDroite.setTranslateX(x2 - (rightPane.getWidth()/2)); 
+        pointControleDroite.setTranslateY(y2 - (rightPane.getHeight()/2));
 
         Text indiceText2 = new Text(String.valueOf(label));
         indiceText2.setTranslateX(x2 - (rightPane.getWidth()/2) + 14);
         indiceText2.setTranslateY(y2 - (rightPane.getHeight()/2) - 14);
-        rightPane.getChildren().addAll(pointControleFin, indiceText2);
+        rightPane.getChildren().addAll(pointControleDroite, indiceText2);
 
-        pointControleFin.setOnMousePressed(event -> handler.handlePanePress(event, pointFin));
-        pointControleFin.setOnMouseDragged(event -> handler.handlePaneDrag(event, pointFin, pointControleFin, indiceText2));
-        pointControleFin.setOnMouseReleased(event -> handler.handleMouseRelease(event));
+        //on applique les contrôleurs sur le point de l'image de droite (ie la possibilité de le déplacer) 
+        pointControleDroite.setOnMousePressed(event -> controleur2.handlePanePress(event, pointDroite));
+        pointControleDroite.setOnMouseDragged(event -> controleur2.handlePaneDrag(event, pointDroite, pointControleDroite, indiceText2));
+        pointControleDroite.setOnMouseReleased(event -> controleur2.handleMouseRelease(event));
     }
 
+    /**
+     * Procédure pour reset les points de contrôle 
+     * @param event
+     */
     public void handleReset(ActionEvent event){
-        pointsControleDebut.clear();
-        pointsControleFin.clear();
+        pointsControleGauche.clear();
+        pointsControleDroite.clear();
         for (int i = leftPane.getChildren().size() - 1; i > 0; i--){
             leftPane.getChildren().remove(i); 
         }
         for (int i = rightPane.getChildren().size() - 1; i > 0; i--){
             rightPane.getChildren().remove(i); 
         }
+        indexPoint = 3;
         alphabetIndex[0]=0;  
-    }
-    public static Map<Character, Point> getPointsControleDebut() {
-    	return pointsControleDebut;
-    }
-    public static Map<Character, Point> getPointsControleFin() {
-    	return pointsControleFin;
     }
 }

@@ -1,4 +1,12 @@
 package utilitaires;
+
+/**
+ * Classe Pixel
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public class Pixel {
     private int r; 
     private int v; 
@@ -6,7 +14,7 @@ public class Pixel {
 
     public Pixel (int r, int v, int b){
         this.r = r; 
-        this.v = v;
+        this.v = v; 
         this.b = b; 
     }
 

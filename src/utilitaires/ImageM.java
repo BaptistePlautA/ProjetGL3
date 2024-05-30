@@ -3,13 +3,23 @@ package utilitaires;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
+/**
+ * Classe ImageM
+ * @author Groupe 3 
+ * @version 1.0
+ * @date 29 mai 2024
+ *
+ */
 public class ImageM {
 	
-	private Pixel[][] tab;
+	private Pixel[][] tab; 
     
+    /**
+     * Constructeur de la classe ImageM  
+     * @param imagePath  
+     */
     public ImageM(String imagePath) {
         BufferedImage image = null;
         try {
@@ -57,8 +67,12 @@ public class ImageM {
     public void setTab(Pixel[][] tab) {
         this.tab = tab;
     }
-    
-    public void saveImage(String outputPath) {
+
+    /**
+     * Procédure qui enregistre une image 
+     * @param outputPath  
+     */
+    public void sauvegarderImage(String outputPath) {
         int width = tab[0].length;
         int height = tab.length;
 
@@ -79,5 +93,4 @@ public class ImageM {
             e.printStackTrace();
         }
     }
-
 }
