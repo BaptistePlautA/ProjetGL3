@@ -1,12 +1,14 @@
 
 # Morphing d'image
 
-Projet consistant à produire un morphing d'images entre une image de départ et une image d'arrivée, caractérisé par un gif. 
+Ce projet consiste à produire un morphing d'images, une technique qui permet de transformer progressivement une image de départ en une image d'arrivée en utilisant des points de contrôle. 
+Ces points de contrôle sont placés sur les images pour guider la transformation. 
+Le résultat final est un GIF animé qui illustre cette transition de manière fluide et dynamique, montrant chaque étape de la transformation guidée par les points de contrôle.
 
-l'Appli se compose de 3 morphings différents :
-* un morphing de formes simples
-* un morphing de formes arrondies 
-* un morphing d'images
+L'application se compose de 3 morphings différents :
+* un morphing de formes simples : on traite des lignes brisées et la transition se fait en déplaçant linéairement les points de contrôles.
+* un morphing de formes arrondies : on traite des courbes et la transition reste la même. 
+* un morphing d'images : en utilisant la méthode de triangulation de Delaunay.
 
 ***
 
@@ -14,36 +16,38 @@ l'Appli se compose de 3 morphings différents :
 
 1. Pré-requis
 2. Déploiement
-3. Exemples d'utilisation
-4. Documentation
-5. Technologies utilisées
+3. Instructions
+4. Exemples d'utilisation
+5. Documentation
+6. Technologies utilisées
    
 ***
 
 ## Pré-requis
 
-installer les dépendances javafx.controls, fxml, graphics, swing 
+Installer les dépendances javafx.controls, fxml, graphics, swing. 
 ***
 
 ## Déploiement
 
-Ecrire dans VM arguments de Run Configurations :
+Écrire la ligne suivante dans VM arguments de Run Configurations :
 
 ```bash
 --module-path /home/cytech/Desktop/Java/openjfx-22_linux-x64_bin-sdk/javafx-sdk-22/lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.swing
 ```
 
-accepte les .png et les .jpg
+## Instructions
 
 ### Choix des images 
 Pour chacun des types de morphisme, l'utilisateur peut choisir son image de début et de fin en cliquant respectivement sur "Choisir l'image de gauche" et "Choisir l'image de droite". 
+Attention, le nom de l'image ne doit pas comporter d'espaces et les extensions acceptées sont : png et jpg. 
 
 ### Points de contrôle 
-- Pour le morphing simple : l'utilisateur peut ajouter des points sur l'image de gauche et leurs équivalents apparaissent sur l'image de droite. Sur cette dernière, l'utilisateur peut déplacer les points pour les positionner selon la forme de fin. Il est recommandé de positionner les points sur les sommets des formes ou sur leurs arêtes. 
+- Pour le morphing simple : l'utilisateur peut ajouter des points sur l'image de gauche et les équivalents apparaissent sur l'image de droite. Sur cette dernière, l'utilisateur peut déplacer les points pour les positionner selon la forme de fin. Il est recommandé de positionner les points sur les sommets ou les arêtes des formes. 
 
-- Pour le morphing arrondi, les points de contrôle classique fonctionnent de la même manière. Il y a en addition, l'ajout de points intermédiaires entre deux points de contrôle. Ces derniers apparaissent sur les deux images et permettent de dessiner de la courbure de la courbe. L'utilisateur est donc amené à les déplacer pour faire correspondre la courbure de la ligne généré avec la courbure de la forme arrondie de l'image. Il faut également faire une décomposition de la courbe de la forme arrondie en plusieurs points de contrôle pour des soucis de précision.
+- Pour le morphing arrondi, les points de contrôle classique fonctionnent de la même manière que pour le morphing simple. En plus, il y a l'ajout de deux points intermédiaires entre deux points de contrôle. Ces derniers apparaissent sur les deux images et permettent de dessiner de la courbure de la courbe. L'utilisateur doit déplacer ces points intermédiaires pour faire correspondre la courbure de la ligne généré avec la courbure de la forme arrondie de l'image. Pour plus de précision, il est également nécessaire de décomposer la courbe de la forme arrondie en plusieurs points de contrôle.
 
-- Pour le morphing d'images, les points de contrôles fonctionnent comme pour le morphing simple. Il est recommandé de positionner les points sur des éléments caractéristiques de l'image, sur le sujet qui va être déplacé. S'il s'agit de visages, alors positionner sur les yeux, le nez, les oreilles, le haut et le bas du visage. 
+- Pour le morphing d'images, les points de contrôles fonctionnent comme pour le morphing simple. Il est recommandé de positionner les points sur des éléments caractéristiques de l'image, sur le sujet qui va être transformé. Par exemple, pour des visages, placez les points sur les yeux, le nez, les oreilles, ou encore le haut et le bas du visage.
 
 ***
 
@@ -63,11 +67,6 @@ Exemple d'un morphing d'images entre deux tableaux de Van Gogh :
 ***
 
 ## Documentation
-
-[Documentation](https://docs.google.com/document/d/1laq1xMgcM8cnwBgvdIpf29Tavy6Ft_AikcwHVvL0pTc/edit?usp=sharing)
-
-
-[Javadoc](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html)
 
 [ImageIO pour la conversion en GIF](https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/javax/imageio/ImageIO.html)
 
