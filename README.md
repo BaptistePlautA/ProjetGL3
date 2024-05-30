@@ -51,9 +51,11 @@ Pour chacun des types de morphisme, l'utilisateur peut choisir son image de déb
 
 Exemple d'un morphing entre une forme simple rectangulaire vers une forme simple triangulaire :
 
+![](https://github.com/BaptistePlautA/ProjetGL3/blob/Lukas/simple.gif)
 
 Exemple d'un morphing de formes arrondies entre un coeur et une croix :
 
+![](https://github.com/BaptistePlautA/ProjetGL3/blob/Lukas/arrondi.gif)
 
 Exemple d'un morphing d'images entre deux tableaux de Van Gogh :
 
