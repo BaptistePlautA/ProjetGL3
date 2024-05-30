@@ -306,6 +306,10 @@ public class PointsControleIntermediairesPlacerHandler implements EventHandler<M
     public void handleReset(ActionEvent event){
         pointsControleGauche.clear();
         pointsControleDroite.clear();
+        pointsIntermediairesGauche.clear(); 
+        pointsIntermediairesDroite.clear();
+        pointsMorphingDebut.clear(); 
+        pointsMorphingFin.clear(); 
         for (int i = leftPane.getChildren().size() - 1; i > 0; i--){
             leftPane.getChildren().remove(i); 
         }
