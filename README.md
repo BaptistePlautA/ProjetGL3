@@ -17,6 +17,7 @@ l'Appli se compose de 3 morphings différents :
 3. Exemples d'utilisation
 4. Documentation
 5. Technologies utilisées
+   
 ***
 
 ## Pré-requis
@@ -34,49 +35,15 @@ Ecrire dans VM arguments de Run Configurations :
 
 accepte les .png et les .jpg
 
-Le gif généré est à retrouver dans :
+### Choix des images 
+Pour chacun des types de morphisme, l'utilisateur peut choisir son image de début et de fin en cliquant respectivement sur "Choisir l'image de gauche" et "Choisir l'image de droite". 
 
-```bash
-./src/ressources
-```
+### Points de contrôle 
+- Pour le morphing simple : l'utilisateur peut ajouter des points sur l'image de gauche et leurs équivalents apparaissent sur l'image de droite. Sur cette dernière, l'utilisateur peut déplacer les points pour les positionner selon la forme de fin. Il est recommandé de positionner les points sur les sommets des formes ou sur leurs arêtes. 
 
-### Formes simples
+- Pour le morphing arrondi, les points de contrôle classique fonctionnent de la même manière. Il y a en addition, l'ajout de points intermédiaires entre deux points de contrôle. Ces derniers apparaissent sur les deux images et permettent de dessiner de la courbure de la courbe. L'utilisateur est donc amené à les déplacer pour faire correspondre la courbure de la ligne généré avec la courbure de la forme arrondie de l'image. Il faut également faire une décomposition de la courbe de la forme arrondie en plusieurs points de contrôle pour des soucis de précision.
 
-Possibilité de choisir l'image de départ et l'image d'arrivée en cliquant sur "Choisir l'image de gauche" et "Choisir l'image de droite". Le but ici est de générer un morphing entre deux formes simples n'ayant que des lignes brisées.
-
-#### Image gauche
-
-Cliquer sur les sommets de la forme simple, un point de contrôle non déplaçable apparait et son équivalent sur l'image de droite apparait également.
-Si besoin de recommencer la disposition des points, cliquer sur "réinitialiser".
-
-#### Image droite
-
-Déplacer les points de contrôles sur les sommets de la figure de droite ou sur les arêtes à défaut.
-
-
-### Formes arrondies
-
-Possibilité de choisir l'image de départ et l'image d'arrivée en cliquant sur "Choisir l'image de gauche" et "Choisir l'image de droite". Le but ici est de générer un morphing entre deux formes qui peuvent avoir des arrondis.
-
-#### Image de gauche
-
-Ici les points de contrôle vont par 4. cliquer sur un sommet ou une arête pour qu'un point de contrôle apparaisse. tous les deux points de contôles, deux autres points de contôles intermédiaires de couleur bleu apparaissent, ainsi qu'une ligne matérialisant la courbe de départ. Les deux points bleus peuvent être déplacés dans l'image de gauche. Attention, il faut faire correspondre la courbure de la ligne généré avec la courbure de la Forme arrondie de l'image gauche. Les points bleus ne sont donc pas nécéssairement sur la figure.
-Il est aussi important de prévoir une décomposition de la courbe de la forme arrondie en plusieurs points de contrôle pour des soucis de précision.
-
-#### Image de droite
-
-Même principe que pour l'image gauche, il faut faire correspondre la ligne entre les 4 points avec les courbes potentielles de la forme arrondie de l'image droite.
-
-
-### Morphing d'images
-
-Possibilité de choisir l'image de départ et l'image d'arrivée en cliquant sur "Choisir l'image de gauche" et "Choisir l'image de droite". Le but ici est de générer un morphing entre deux images png ou jpg.
-
-#### Image de gauche
-mettre les points de contrôles sur des points caractéristiques de l'image comme les yeux, la bouche, ou sur un paysages des caractéristiques notables (un pic de montagne, un élément particulier, etc ...)
-
-#### Image de droite
-déplacer les points générés sur les points cractéristiques de l'image gauche
+- Pour le morphing d'images, les points de contrôles fonctionnent comme pour le morphing simple. Il est recommandé de positionner les points sur des éléments caractéristiques de l'image, sur le sujet qui va être déplacé. S'il s'agit de visages, alors positionner sur les yeux, le nez, les oreilles, le haut et le bas du visage. 
 
 ***
 
